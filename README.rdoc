@@ -1,0 +1,94 @@
+= Test::Unit Given
+
+Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
+Copyright:: Copyright (c) 2011 by Dave Copeland
+License:: Distributes under the Apache License, see LICENSE.txt in the source distro
+
+This allows you to specify the Given/When/Then in your Test::Unit test cases.  This allows you to more explicitly indicate which parts of your test methods serve which purpose.
+
+== Install
+
+    gem install test_unit_given
+
+== Example
+
+    class Circle
+      def initialize(radius)
+        @radius = radius
+      end
+
+      def area
+        @radius * @radius * 3.14
+      end
+
+    end
+
+    require 'test_unit_given/simple'
+
+    class CircleTest < Test::Unit::TestCase
+      include TestUnitGiven::Simple
+
+      def test_area
+        Given {
+          @circle = Circle.new(10)
+        }
+        When {
+          @area = @circle.area
+        }
+        Then {
+          assert_equal 314,@area
+        }
+      end
+    end
+
+You can also strictly enforce the use in your tests:
+
+    require 'test_unit_given/strict'
+
+    class CircleTest < Test::Unit::TestCase
+      include TestUnitGiven::Strict
+
+      def test_area
+        @circle = Circle.new(10)
+        When {
+          # this causes an error, because there's no Given
+          @area = @circle.area
+        }
+        Then {
+          assert_equal 314,@area
+        }
+      end
+    end
+
+Finally, you can re-use blocks:
+
+    class CircleTest < Test::Unit::TestCase
+      include TestUnitGiven::Strict
+
+      def circle_with_radius(r)
+        @circle = Circle.new(r)
+      end
+
+      def get_area
+        @area = @circle.area
+      end
+
+      def area_should_be(area)
+        assert_equal area,@area
+      end
+
+      def test_area
+        Given circle_with_radius(10)
+        When get_radius
+        Then area_should_be(314)
+      end
+    end
+
+== WTF?  Why?
+
+Just because you're using Test::Unit doesn't mean you can't write fluent, easy to understand tests.
+You really don't need RSpec, and RSpec has some baggage, such as nonstandard assignment, confusing class_eval
+blocks, and generally replaces stuff you can do in plain Ruby.  Here, everything is simple, plain Ruby.  No
+magic, nothing to understand. 
+
+If you like Test::Unit, and you want to make your tests a bit more readable, this is for you.
