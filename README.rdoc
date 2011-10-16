@@ -26,7 +26,7 @@ This allows you to specify the Given/When/Then in your Test::Unit test cases.  T
     require 'test_unit_given/simple'
 
     class CircleTest < Test::Unit::TestCase
-      include TestUnitGiven::Simple
+      include Test::Unit::Given::Simple
 
       def test_area
         Given {
@@ -46,7 +46,7 @@ You can also strictly enforce the use in your tests:
     require 'test_unit_given/strict'
 
     class CircleTest < Test::Unit::TestCase
-      include TestUnitGiven::Strict
+      include Test::Unit::Given::Strict
 
       def test_area
         @circle = Circle.new(10)
@@ -63,7 +63,7 @@ You can also strictly enforce the use in your tests:
 Finally, you can re-use blocks:
 
     class CircleTest < Test::Unit::TestCase
-      include TestUnitGiven::Strict
+      include Test::Unit::Given::Strict
 
       def circle_with_radius(r)
         @circle = Circle.new(r)

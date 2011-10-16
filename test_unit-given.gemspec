@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "test_unit_given/version"
+require "test/unit/given/version"
 
 Gem::Specification.new do |s|
   s.name        = "test_unit-given"
-  s.version     = TestUnitGiven::VERSION
+  s.version     = Test::Unit::Given::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["David Copeland"]
   s.email       = ["davetron5000@gmail.com"]

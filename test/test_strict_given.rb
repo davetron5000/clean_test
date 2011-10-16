@@ -1,8 +1,8 @@
 require 'test/unit'
-require 'test_unit_given/strict'
+require 'test/unit/given/strict'
 
 class TestStrictGiven < Test::Unit::TestCase
-  include TestUnitGiven::Strict
+  include Test::Unit::Given::Strict
 
   def test_wrong_order_then_first
     assert_raises RuntimeError do
