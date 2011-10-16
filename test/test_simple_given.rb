@@ -59,6 +59,17 @@ class TestSimpleGiven < Test::Unit::TestCase
     }
   end
 
+  def test_invert_for_block_based_asserts
+    Given a_nil_x
+    Then {
+      assert_raises NoMethodError do
+        When {
+          @x + 4
+        }
+      end
+    }
+  end
+
   private 
 
   def a_nil_x

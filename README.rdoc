@@ -84,6 +84,29 @@ Finally, you can re-use blocks:
       end
     end
 
+=== What about block-based assertions, like +assert_raises+
+
+You can use the non-strict version like so:
+
+    class CircleTest < Test::Unit::TestCase
+      include Test::Unit::Given::Simple
+
+      def test_no_diamter_method
+        Given {
+          @cicle = Circle.new(10)
+        }
+        Then {
+          assert_raises NoMethodError do
+            When {
+              @cirlce.diameter
+            }
+          end
+        }
+      end
+    end
+
+This won't work in strict mode
+
 == WTF?  Why?
 
 Just because you're using Test::Unit doesn't mean you can't write fluent, easy to understand tests.
