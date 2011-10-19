@@ -17,6 +17,7 @@ This gives you two simple tools to make your test cases readable:
 
 == Example
 
+```Ruby
     class Circle
       def initialize(radius)
         @radius = radius
@@ -46,6 +47,7 @@ This gives you two simple tools to make your test cases readable:
 
 You can, of course, provide a description for your test if you need to:
 
+```Ruby
     class CircleTest < Test::Unit::Given::TestCase
       test_that "the area is correctly calculated" do
         Given {
@@ -61,6 +63,7 @@ You can, of course, provide a description for your test if you need to:
 
 If you don't want to extend our base class, you can mix in the features explicitly:
 
+```Ruby
     require 'test/unit/given/simple'
 
     class CircleTest < Test::Unit::TestCase
@@ -83,6 +86,7 @@ If you don't want to extend our base class, you can mix in the features explicit
 
 You can also strictly enforce the use in your tests:
 
+```Ruby
     require 'test/unit/given/strict'
 
     class CircleTest < Test::Unit::TestCase
@@ -103,6 +107,7 @@ You can also strictly enforce the use in your tests:
 
 Finally, you can re-use blocks:
 
+```Ruby
     class CircleTest < Test::Unit::Given::TestCase
 
       def circle_with_radius(r)
@@ -128,6 +133,7 @@ Finally, you can re-use blocks:
 
 You can use the non-strict version like so:
 
+```Ruby
     class CircleTest < Test::Unit::Given::TestCase
 
       test_that "there is no diameter method" do
