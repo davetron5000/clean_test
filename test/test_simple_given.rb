@@ -1,8 +1,7 @@
 require 'test/unit'
-require 'test/unit/given/simple'
+require 'test/unit/given'
 
-class TestSimpleGiven < Test::Unit::TestCase
-  include Test::Unit::Given::Simple
+class TestSimpleGiven < Test::Unit::Given::TestCase
 
   def test_basics
     Given {

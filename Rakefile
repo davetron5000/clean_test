@@ -23,3 +23,5 @@ RDoc::Task.new do |rd|
   rd.title = 'Methadone - Power Up your Command Line Apps'
   rd.markup = "tomdoc"
 end
+
+task :default => :test
