@@ -13,7 +13,7 @@ This gives you two simple tools to make your test cases readable:
 
 == Install
 
-    gem install test_unit_given
+    gem install test_unit-given
 
 == Example
 
