@@ -67,6 +67,33 @@ module Test
           Given(existing_block,&block)
         end
 
+        # Public: Continue the previous Given/When/Then in a new block.  The reason
+        # you might do this is if you wanted to use the existing block form of a
+        # Given/When/Then, but also need to do something custom.  This allows you to 
+        # write your test more fluently.
+        #
+        # existing_block - a callable object (e.g. a Proc) that will be called immediately
+        #                  by this Then.  If nil, &block is expected to be passed
+        # block          - a block given to this call that will be executed immediately
+        #                  by this Then.  If existing_block is non-nil, this is ignored
+        #
+        # Examples
+        #     
+        #     then_block = Then {
+        #       assert_equal "bar",@foo
+        #     }
+        #     # => executes block and returns it
+        #     Then then_block
+        #     And {
+        #       assert_equal, "quux",@blah
+        #     }
+        #     # => executes the block again
+        #
+        # Returns the block that was executed
+        def And(existing_block=nil,&block)
+          Given(existing_block,&block)
+        end
+
         private
 
         def call_block_param_or_block_given(existing_block,&block)

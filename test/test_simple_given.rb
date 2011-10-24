@@ -7,11 +7,20 @@ class TestSimpleGiven < Test::Unit::Given::TestCase
     Given {
       @x = nil
     }
+    And {
+      @y = nil
+    }
     When {
       @x = 4
     }
+    And {
+      @y = 10
+    }
     Then {
       assert_equal 4,@x
+    }
+    And {
+      assert_equal 10,@y
     }
   end
 

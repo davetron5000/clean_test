@@ -102,6 +102,7 @@ You can also strictly enforce the use in your tests:
     end
 
 Finally, you can re-use blocks:
+Finally, you can re-use blocks, and use And to create richer expressions:
 
     class CircleTest < Test::Unit::Given::TestCase
 
@@ -120,13 +121,17 @@ Finally, you can re-use blocks:
       test_that {
         Given circle_with_radius(10)
         When get_radius
+        And {
+          @diameter = @circle.diameter
+        }
         Then area_should_be(314)
+        And {
+          assert_equal 20,@diameter
+        }
       }
     end
 
 === What about block-based assertions, like +assert_raises+
-
-You can use the non-strict version like so:
 
     class CircleTest < Test::Unit::Given::TestCase
 
