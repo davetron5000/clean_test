@@ -81,27 +81,7 @@ If you don't want to extend our base class, you can mix in the features explicit
       }
     end
 
-You can also strictly enforce the use in your tests:
 
-    require 'test/unit/given/strict'
-
-    class CircleTest < Test::Unit::TestCase
-      include Test::Unit::Given::Strict
-      include Test::Unit::Given::TestThat
-
-      test_that {
-        @circle = Circle.new(10)
-        When {
-          # this causes an error, because there's no Given
-          @area = @circle.area
-        }
-        Then {
-          assert_equal 314,@area
-        }
-      }
-    end
-
-Finally, you can re-use blocks:
 Finally, you can re-use blocks, and use And to create richer expressions:
 
     class CircleTest < Test::Unit::Given::TestCase
@@ -148,8 +128,6 @@ Finally, you can re-use blocks, and use And to create richer expressions:
         }
       end
     end
-
-This won't work in strict mode for now.
 
 == WTF?  Why?
 
