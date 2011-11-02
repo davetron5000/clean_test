@@ -52,8 +52,12 @@ module Test
           private 
 
           def make_up_name(some_proc)
-            name,location = some_proc.source_location
-            "anonymous test at #{name}, line #{location}"
+            if some_proc.respond_to? :source_location
+              name,location = some_proc.source_location
+              "anonymous test at #{name}, line #{location}"
+            else
+              "anonymous test for proc #{some_proc.object_id}"
+            end
           end
         end
 

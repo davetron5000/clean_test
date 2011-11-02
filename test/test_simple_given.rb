@@ -83,4 +83,8 @@ class TestSimpleGiven < Test::Unit::Given::TestCase
   def a_nil_x
     Proc.new { @x = nil }
   end
+
+  def refute(bool_expr)
+    assert !bool_expr
+  end
 end
