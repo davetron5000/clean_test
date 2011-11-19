@@ -111,6 +111,50 @@ Finally, you can re-use blocks, and use And to create richer expressions:
       }
     end
 
+=== What about mocks?
+
+Mocks create an interesting issue, because the "assertions" are the mock expectations you setup before you call the method under test.  This means that the "then" side of things is out of order.
+
+    class CircleTest < Test::Unit::Given::TestCase
+      test_that "our external diameter service is being used" do
+        Given {
+          @diameter_service = mock()
+          @diameter_service.expects(:get_diameter).with(10).returns(400)
+          @cirlce = Circle.new(10,@diameter_service)
+        }
+        When  {
+          @diameter = @cirlce.diameter
+        }
+        Then {
+          // assume mocks were called
+        }
+      end
+    end
+
+This is somewhat confusing.  We could solve it like so:
+
+    class CircleTest < Test::Unit::Given::TestCase
+      test_that "our external diameter service is being used" do
+        Given {
+          @diameter_service = mock()
+        }
+        When mocks_are_called
+        Then {
+          @diameter_service.expects(:get_diameter).with(10).returns(400)
+        }
+        Given {
+          @cirlce = Circle.new(10,@diameter_service)
+        }
+        When  {
+          @diameter = @cirlce.diameter
+        }
+        Then mocks_shouldve_been_called
+      end
+    end
+
+Although both <tt>mocks_are_called</tt> and <tt>mocks_shouldve_been_called</tt> are no-ops,
+they allow our tests to be readable and make clear what the assertions are that we are making.
+
 === What about block-based assertions, like +assert_raises+
 
     class CircleTest < Test::Unit::Given::TestCase

@@ -9,6 +9,7 @@ class TestSimpleGiven < Test::Unit::Given::TestCase
     }
     And {
       @y = nil
+      @z = 10
     }
     When {
       @x = 4
@@ -16,12 +17,28 @@ class TestSimpleGiven < Test::Unit::Given::TestCase
     And {
       @y = 10
     }
+    But {
+      @z # not assigned
+    }
     Then {
       assert_equal 4,@x
     }
     And {
       assert_equal 10,@y
     }
+    But {
+      assert_equal 10,@z
+    }
+  end
+
+  def test_mock_support
+    Given { @x = 4 }
+    When mocks_are_called
+    Then { }
+    Given { @y = 4 }
+    When { @y = 10 }
+    Then { assert_equal 10,@y }
+    And mocks_shouldve_been_called
   end
 
   def test_cannot_use_locals
