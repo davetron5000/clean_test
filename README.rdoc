@@ -58,17 +58,14 @@ You can, of course, provide a description for your test if you need to:
           assert_equal 314,@area
         }
       end
+    end
 
-If you don't want to extend our base class, you can mix in the features explicitly:
-
-    require 'test/unit/given/simple'
+You can use as much, or as little, of this library as you want.  If you don't like +test_that+, it's no problem:
 
     class CircleTest < Test::Unit::TestCase
-
       include Test::Unit::Given::Simple
-      include Test::Unit::Given::TestThat
 
-      test_that {
+      def test_that_area_is_calculated
         Given {
           @circle = Circle.new(10)
         }
@@ -78,24 +75,58 @@ If you don't want to extend our base class, you can mix in the features explicit
         Then {
           assert_equal 314,@area
         }
-      }
+      end
     end
 
+If you just want to use the +Given+, you can:
 
-Finally, you can re-use blocks, and use And to create richer expressions:
+    class CircleTest < Test::Unit::TestCase
+      include Test::Unit::Given::Simple
+
+      def test_that_area_is_calculated
+        Given {
+          @circle = Circle.new(10)
+        }
+        area = @circle.area
+        assert_equal 314,@area
+      end
+    end
+
+Feel a +Given+ is too verbose?
+
+    class CircleTest < Test::Unit::TestCase
+      include Test::Unit::Given::Simple
+
+      def test_that_area_is_calculated
+        When {
+          @area = Circle.new(10).area
+        }
+        Then {
+          assert_equal 314,@area
+        }
+      end
+    end
+
+Use whatever makes sense; this is here to make your tests readable and communicate your intent, *not* lock you into some particular way of writing your tests.
+
+== How does it work?
+
++Given+/+When+/+Then+/+And+/+But+ are all the same method under the covers.  They take a block and execute it immediately.  By using instance variables, you can send information between blocks.  This is actually a feature, since it means than any instance variables are important while local variables are just there to set up your test or help evalulate things.
+
+This means that you can make methods that return blocks as a means of re-use.
 
     class CircleTest < Test::Unit::Given::TestCase
 
       def circle_with_radius(r)
-        @circle = Circle.new(r)
+        lambda { @circle = Circle.new(r) }
       end
 
       def get_area
-        @area = @circle.area
+        lambda { @area = @circle.area }
       end
 
       def area_should_be(area)
-        assert_equal area,@area
+        lambda { assert_equal area,@area }
       end
 
       test_that {
@@ -111,6 +142,10 @@ Finally, you can re-use blocks, and use And to create richer expressions:
       }
     end
 
+I would not recommend doing this a lot, as it can make things very confusing.  You could just as easily continue to use methods.
+
++test_that+ works just like +test+ in Rails, except that it doesn't require a name.  If your test is short enough, naming it might make things more confusing.  I tend to always name mine, but on occasion it gets in the way.
+
 === What about mocks?
 
 Mocks create an interesting issue, because the "assertions" are the mock expectations you setup before you call the method under test.  This means that the "then" side of things is out of order.
@@ -120,10 +155,10 @@ Mocks create an interesting issue, because the "assertions" are the mock expecta
         Given {
           @diameter_service = mock()
           @diameter_service.expects(:get_diameter).with(10).returns(400)
-          @cirlce = Circle.new(10,@diameter_service)
+          @circle = Circle.new(10,@diameter_service)
         }
         When  {
-          @diameter = @cirlce.diameter
+          @diameter = @circle.diameter
         }
         Then {
           // assume mocks were called
@@ -131,42 +166,46 @@ Mocks create an interesting issue, because the "assertions" are the mock expecta
       end
     end
 
-This is somewhat confusing.  We could solve it like so:
+This is somewhat confusing.  We could solve it using two blocks provided by this library, +test_runs+, and +mocks_shouldve_been_called+, like so:
 
     class CircleTest < Test::Unit::Given::TestCase
       test_that "our external diameter service is being used" do
         Given {
           @diameter_service = mock()
         }
-        When mocks_are_called
+        When test_runs
         Then {
           @diameter_service.expects(:get_diameter).with(10).returns(400)
         }
         Given {
-          @cirlce = Circle.new(10,@diameter_service)
+          @circle = Circle.new(10,@diameter_service)
         }
         When  {
-          @diameter = @cirlce.diameter
+          @diameter = @circle.diameter
         }
         Then mocks_shouldve_been_called
       end
     end
 
-Although both <tt>mocks_are_called</tt> and <tt>mocks_shouldve_been_called</tt> are no-ops,
+Although both <tt>test_runs</tt> and <tt>mocks_shouldve_been_called</tt> are no-ops,
 they allow our tests to be readable and make clear what the assertions are that we are making.
 
+Yes, this makes our test a bit longer, but it's *much* more clear.
+
 === What about block-based assertions, like +assert_raises+
+
+Again, things are a bit out of order, but if you invert Then and When, you'll still get a readable test:
 
     class CircleTest < Test::Unit::Given::TestCase
 
       test_that "there is no diameter method" do
         Given {
-          @cicle = Circle.new(10)
+          @circle = Circle.new(10)
         }
         Then {
           assert_raises NoMethodError do
             When {
-              @cirlce.diameter
+              @circle.diameter
             }
           end
         }

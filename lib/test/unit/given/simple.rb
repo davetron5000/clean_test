@@ -136,7 +136,7 @@ module Test
         #     Given {
         #       @google = mock()
         #     }
-        #     When mocks_are_called
+        #     When test_runs
         #     Then {
         #       @google.expects(:search).with('foo').returns('bar')
         #     }
@@ -150,11 +150,11 @@ module Test
         #       assert_equal 'Found bar',@result
         #     }
         #     And mocks_shouldve_been_called
-        def mocks_are_called
+        def test_runs
           lambda {}
         end
 
-        # Similar to #mocks_are_called, this is used to make clear what
+        # Similar to #test_runs, this is used to make clear what
         # you are testing and what the assertions are.  Since many Ruby mock
         # frameworks do not require an explicit "verify" step, you often have tests
         # that have no explicit asserts, the assertions being simply that the mocks were called

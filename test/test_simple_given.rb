@@ -33,7 +33,7 @@ class TestSimpleGiven < Test::Unit::Given::TestCase
 
   def test_mock_support
     Given { @x = 4 }
-    When mocks_are_called
+    When test_runs
     Then { }
     Given { @y = 4 }
     When { @y = 10 }
