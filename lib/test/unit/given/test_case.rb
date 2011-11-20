@@ -1,3 +1,4 @@
+require 'test/unit'
 require 'test/unit/given/simple'
 require 'test/unit/given/test_that'
 
@@ -20,10 +21,6 @@ module Test
       class TestCase < Test::Unit::TestCase
         include Simple
         include TestThat
-
-        def test_nothing_for_187
-          # 1.8.7 seems to need this
-        end
       end
     end
   end
