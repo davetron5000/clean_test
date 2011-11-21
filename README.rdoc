@@ -166,14 +166,14 @@ Mocks create an interesting issue, because the "assertions" are the mock expecta
       end
     end
 
-This is somewhat confusing.  We could solve it using two blocks provided by this library, +test_runs+, and +mocks_shouldve_been_called+, like so:
+This is somewhat confusing.  We could solve it using two blocks provided by this library, +the_test_runs+, and +mocks_shouldve_been_called+, like so:
 
     class CircleTest < Test::Unit::Given::TestCase
       test_that "our external diameter service is being used" do
         Given {
           @diameter_service = mock()
         }
-        When test_runs
+        When the_test_runs
         Then {
           @diameter_service.expects(:get_diameter).with(10).returns(400)
         }
@@ -187,7 +187,7 @@ This is somewhat confusing.  We could solve it using two blocks provided by this
       end
     end
 
-Although both <tt>test_runs</tt> and <tt>mocks_shouldve_been_called</tt> are no-ops,
+Although both <tt>the_test_runs</tt> and <tt>mocks_shouldve_been_called</tt> are no-ops,
 they allow our tests to be readable and make clear what the assertions are that we are making.
 
 Yes, this makes our test a bit longer, but it's *much* more clear.

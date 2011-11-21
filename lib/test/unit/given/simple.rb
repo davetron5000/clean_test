@@ -136,7 +136,7 @@ module Test
         #     Given {
         #       @google = mock()
         #     }
-        #     When test_runs
+        #     When the_test_runs
         #     Then {
         #       @google.expects(:search).with('foo').returns('bar')
         #     }
@@ -150,7 +150,7 @@ module Test
         #       assert_equal 'Found bar',@result
         #     }
         #     And mocks_shouldve_been_called
-        def test_runs
+        def the_test_runs
           lambda {}
         end
 
