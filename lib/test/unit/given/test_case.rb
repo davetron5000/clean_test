@@ -21,6 +21,12 @@ module Test
       class TestCase < Test::Unit::TestCase
         include Simple
         include TestThat
+        if RUBY_VERSION =~ /^1\.8\./
+          # Avoid the stupid behavior of 
+          # complaining that no tests were specified for 1.8.-like rubies
+          def default_test
+          end
+        end
       end
     end
   end
