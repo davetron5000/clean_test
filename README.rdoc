@@ -6,16 +6,31 @@ License:: Distributes under the Apache License, see LICENSE.txt in the source di
 
 Get your Test::Unit test cases fluent, without RSpec, magic, or crazy meta-programming.
 
-This gives you two simple tools to make your test cases readable:
+This gives you some simple tools to make your test cases readable:
 
 * Given/When/Then to delineate which parts of your tests do what
 * A method "test_that" that defines test cases with strings instead of method names (much like +test+ in Rails tests)
+* A module Any that defines methods to create arbitrary values, so it's clear in your tests what values are what, but without having to use long method names like `Faker::Lorem.words(2).join(' ')`
 
 == Install
 
     gem install test_unit-given
 
-== Example
+== `test_that`
+
+    class SomeTest < Test::Unit::Given::TestCase
+      test_that {
+        # do a test
+      }
+
+      test_that "description of our test" do
+        # do a test
+      end
+    end
+
+Yes, just like `test` from Rails, but without having to have ActiveSupport
+
+== Given/When/Then
 
     class Circle
       def initialize(radius)
@@ -211,6 +226,67 @@ Again, things are a bit out of order, but if you invert Then and When, you'll st
         }
       end
     end
+
+== Any
+
+Our tests tend to have a lot of arbitrary or meaningless values.  They also have a lot of very important and meaningfule values.  Often both of these are expressed as literals in our code.  What the Any module gives you is the ability to hide arbitrary values behind a method call.  This will ensure that the values truly are arbitrary, and will also mean that any literals left in your tests are important.  For example, you might have a test like this:
+
+
+    def test_something
+      service = mock()
+      service.expects(:remote_call).with({ :method => 'process', :amount => 45.6}).returns(87)
+      object_under_test = ObjectUnderTest.new('foo',service)
+
+      assert_equal 8700,object_under_test.doit
+    end
+
+What's being tested here?  What values are meaningfule and which aren't?  Let's apply Any to make it clear:
+
+    def test_something
+      service = mock()
+      service_return = any_int
+      service.expects(:remote_call).with({ :method => any_string, :amount => any_number}).returns(service_return)
+      object_under_test = ObjectUnderTest.new(any_string,service)
+
+      assert_equal (service_return * 100),object_under_test.doit
+    end
+
+*Now* it's clear that we're expecting our object under test to multiple the return of our service call by 100.  The only value that has any meaning to this test is the integer 100, and that's the only literal that's there.  Beauty.
+
+=== What about Faker or Sham?
+
+They simply don't provide a concise API to do this, nor do they really communicate this concept.  We aren't passing _fake_ strings or numbers, we're passing *arbitrary* strings and numbers.  It's worth making that clear in our tests that certainly values that must not be nil, don't matter to the test.  That they are random each time keeps us honest.
+
+=== What if I need some sort of restriction?
+
+Two ways to do that.  The built-in any_* methods provide limited options:
+
+    def test_truncate
+      person = Person.new
+      person.name = any_string :min => 256
+      person.age = any_int :positive
+      person.save!
+      assert_equal 255,person.name.length
+    end
+
+The second way is to create your own any:
+
+    def setup
+      new_any :age do |options|
+        age = any_number % 80
+        age += 18 if options == :adult
+        age
+      end
+    end
+
+    def test_truncate
+      person = Person.new
+      person.name = any_string :min => 256
+      person.age = any :age, :adult
+      person.save!
+      assert_equal 255,person.name.length
+    end
+
 
 == WTF?  Why?
 

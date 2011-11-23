@@ -21,7 +21,7 @@ RDoc::Task.new do |rd|
   rd.main = "README.rdoc"
   rd.generator = 'hanna'
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
-  rd.title = 'Methadone - Power Up your Command Line Apps'
+  rd.title = 'Test::Unit::Given - make your unit tests clear'
   rd.markup = "tomdoc"
 end
 CLOBBER << 'coverage'
