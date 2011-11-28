@@ -1,7 +1,7 @@
-module Test
-  module Unit
-    module Given
-      # Public: Module that, when included, makes a class method, +test_that+ available
+module Test #:nodoc:
+  module Unit #:nodoc:
+    module Given #:nodoc:
+      # Public: Module that, when included, makes a class method, +#test_that+ available
       # to create test methods in a more fluent way.  See ClassMethods.
       module TestThat
         def self.included(base)

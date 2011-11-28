@@ -1,10 +1,27 @@
-module Test
-  module Unit
-    module Given
-      # A simple form that doesn't enforce the use of 
-      # Given/When/Then.  This is merely to make it clear
-      # which parts of your test do what
-      module Simple
+module Test #:nodoc:
+  module Unit #:nodoc:
+    module Given #:nodoc:
+      # A means of documenting the parts of your test code according
+      # to the class "Given/When/Then" system.
+      # This does no enforcement of any kind and is merely documentation to make
+      # your tests readable.
+      #
+      # Example:
+      #
+      #     Given {
+      #       @circle = Circle.new(10)
+      #     }
+      #     When {
+      #       @area = @circle.area
+      #     }
+      #     Then {
+      #       assert_equal 314,@area
+      #     }
+      #
+      # There are also two additional methods provided ,#the_test_runs and
+      # #mocks_shouldve_been_called to assist with creating readable tests that use mocks.  See those
+      # methods for an example
+      module GivenWhenThen
         # Public: Set up the conditions for the test
         #
         # existing_block - a callable object (e.g. a Proc) that will be called immediately
@@ -14,12 +31,9 @@ module Test
         #
         # Examples
         #     
-        #     given_block = Given {
+        #     Given {
         #       @foo = "bar"
         #     }
-        #     # => executes block and returns it
-        #     Given given_block
-        #     # => executes the block again
         #
         # Returns the block that was executed
         def Given(existing_block=nil,&block)
@@ -34,12 +48,9 @@ module Test
         #
         # Examples
         #     
-        #     when_block = When {
+        #     When {
         #       @foo.go
         #     }
-        #     # => executes block and returns it
-        #     When when_block
-        #     # => executes the block again
         #
         # Returns the block that was executed
         def When(existing_block=nil,&block)
@@ -55,12 +66,9 @@ module Test
         #
         # Examples
         #     
-        #     then_block = Then {
+        #     Then {
         #       assert_equal "bar",@foo
         #     }
-        #     # => executes block and returns it
-        #     Then then_block
-        #     # => executes the block again
         #
         # Returns the block that was executed
         def Then(existing_block=nil,&block)
@@ -79,15 +87,14 @@ module Test
         #
         # Examples
         #     
-        #     then_block = Then {
-        #       assert_equal "bar",@foo
-        #     }
-        #     # => executes block and returns it
-        #     Then then_block
+        #     def circle(radius)
+        #       lambda { @circle = Circle.new(radius) }
+        #     end
+        #
+        #     Given circle(10)
         #     And {
-        #       assert_equal, "quux",@blah
+        #       @another_circle = Circle.new(30)
         #     }
-        #     # => executes the block again
         #
         # Returns the block that was executed
         def And(existing_block=nil,&block)
@@ -107,18 +114,18 @@ module Test
         #
         # Examples
         #     
-        #     given_block = Given {
-        #       @options = {
-        #         :foo => 'bar',
-        #         :quux => 'baz',
+        #     def options
+        #       lambda {
+        #         @options = {
+        #           :foo => 'bar',
+        #           :quux => 'baz',
+        #         }
         #       }
-        #     }
-        #     Given then_block
-        #     And {
-        #       @name = 'Foo'
-        #     }
+        #     end
+        #
+        #     Given options
         #     But {
-        #       @options[:quux] = 'BAZ'
+        #       @options[:foo] = 'baz'
         #     }
         #
         # Returns the block that was executed
@@ -154,7 +161,7 @@ module Test
           lambda {}
         end
 
-        # Similar to #test_runs, this is used to make clear what
+        # Public: Similar to #test_runs, this is used to make clear what
         # you are testing and what the assertions are.  Since many Ruby mock
         # frameworks do not require an explicit "verify" step, you often have tests
         # that have no explicit asserts, the assertions being simply that the mocks were called

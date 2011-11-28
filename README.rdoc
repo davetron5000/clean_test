@@ -4,41 +4,41 @@ Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
 Copyright:: Copyright (c) 2011 by Dave Copeland
 License:: Distributes under the Apache License, see LICENSE.txt in the source distro
 
-Get your Test::Unit test cases fluent, without RSpec, magic, or crazy meta-programming.
+Get your Test::Unit test cases readable and fluent, without RSpec, magic, or crazy meta-programming.
 
-This gives you some simple tools to make your test cases readable:
+This library is a set of small, simple tools to make your Test::Unit test cases easy to understand.  This isn't a massive change in how you write tests, but simply some helpful things will make your tests easier to read.
 
-* Given/When/Then to delineate which parts of your tests do what
-* A method "test_that" that defines test cases with strings instead of method names (much like +test+ in Rails tests)
-* A module Any that defines methods to create arbitrary values, so it's clear in your tests what values are what, but without having to use long method names like `Faker::Lorem.words(2).join(' ')`
+The main problems this library solves are:
+
+* Understanding what part of a test method is setup, test, and evaluation
+* Understanding what elements of a test are relevant, and which are arbitrary
+* Using strings to describe your tests without requiring active support
 
 == Install
 
     gem install test_unit-given
 
-== `test_that`
+Or, with bundler:
 
-    class SomeTest < Test::Unit::Given::TestCase
-      test_that {
-        # do a test
-      }
+    gem "test_unit-given", :require => "test/unit/given"
 
-      test_that "description of our test" do
-        # do a test
-      end
-    end
-
-Yes, just like `test` from Rails, but without having to have ActiveSupport
-
-== Given/When/Then
+== Overview
 
     class Circle
-      def initialize(radius)
+      attr_reader :name
+      attr_reader :radius
+
+      def initialize(radius,name)
         @radius = radius
+        @name = name
       end
 
       def area
         @radius * @radius * 3.14
+      end
+
+      def to_s
+        "circle of radius #{radius}, named #{name}"
       end
 
     end
@@ -46,9 +46,9 @@ Yes, just like `test` from Rails, but without having to have ActiveSupport
     require 'test/unit/given'
 
     class CircleTest < Test::Unit::Given::TestCase
-      test_that {
+      test_that "area is computed correctly" {
         Given {
-          @circle = Circle.new(10)
+          @circle = Circle.new(10,any_string)
         }
         When {
           @area = @circle.area
@@ -57,109 +57,43 @@ Yes, just like `test` from Rails, but without having to have ActiveSupport
           assert_equal 314,@area
         }
       }
-    end
 
-You can, of course, provide a description for your test if you need to:
-
-    class CircleTest < Test::Unit::Given::TestCase
-      test_that "the area is correctly calculated" do
-        Given {
-          @circle = Circle.new(10)
+      test_that "to_s includes the name" {
+        Given { 
+          @name = "foo"
+          @circle = Circle.new(any_int,@name)
         }
         When {
-          @area = @circle.area
+          @string = @circle.to_s
         }
         Then {
-          assert_equal 314,@area
-        }
-      end
-    end
-
-You can use as much, or as little, of this library as you want.  If you don't like +test_that+, it's no problem:
-
-    class CircleTest < Test::Unit::TestCase
-      include Test::Unit::Given::Simple
-
-      def test_that_area_is_calculated
-        Given {
-          @circle = Circle.new(10)
-        }
-        When {
-          @area = @circle.area
-        }
-        Then {
-          assert_equal 314,@area
-        }
-      end
-    end
-
-If you just want to use the +Given+, you can:
-
-    class CircleTest < Test::Unit::TestCase
-      include Test::Unit::Given::Simple
-
-      def test_that_area_is_calculated
-        Given {
-          @circle = Circle.new(10)
-        }
-        area = @circle.area
-        assert_equal 314,@area
-      end
-    end
-
-Feel a +Given+ is too verbose?
-
-    class CircleTest < Test::Unit::TestCase
-      include Test::Unit::Given::Simple
-
-      def test_that_area_is_calculated
-        When {
-          @area = Circle.new(10).area
-        }
-        Then {
-          assert_equal 314,@area
-        }
-      end
-    end
-
-Use whatever makes sense; this is here to make your tests readable and communicate your intent, *not* lock you into some particular way of writing your tests.
-
-== How does it work?
-
-+Given+/+When+/+Then+/+And+/+But+ are all the same method under the covers.  They take a block and execute it immediately.  By using instance variables, you can send information between blocks.  This is actually a feature, since it means than any instance variables are important while local variables are just there to set up your test or help evalulate things.
-
-This means that you can make methods that return blocks as a means of re-use.
-
-    class CircleTest < Test::Unit::Given::TestCase
-
-      def circle_with_radius(r)
-        lambda { @circle = Circle.new(r) }
-      end
-
-      def get_area
-        lambda { @area = @circle.area }
-      end
-
-      def area_should_be(area)
-        lambda { assert_equal area,@area }
-      end
-
-      test_that {
-        Given circle_with_radius(10)
-        When get_radius
-        And {
-          @diameter = @circle.diameter
-        }
-        Then area_should_be(314)
-        And {
-          assert_equal 20,@diameter
+          assert_match /#{@name}/,@string
         }
       }
     end
 
-I would not recommend doing this a lot, as it can make things very confusing.  You could just as easily continue to use methods.
+What's going on here?
 
-+test_that+ works just like +test+ in Rails, except that it doesn't require a name.  If your test is short enough, naming it might make things more confusing.  I tend to always name mine, but on occasion it gets in the way.
+* We can clearly see which parts of our test are setting things up (stuff inside +Given+), which parts are executing the code we're testing (stuff in +When+) and which parts are evalulating the results (stuff in +Then+)
+* We can see which values are relevant to the test - only those that are literals.  In the first test, the +name+ of our circle is not relevant to the test, so instead of using a dummy value like +foo+, we use +any_string+, which makes it clear that the value _does not matter_.  Similarly, in the second test, the radius is irrelevant, so we use +any_int+ to signify that it doesn't matter.
+* Our tests are clearly named and described with strings, but we didn't need to bring in active support.
+
+But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts you like.  Each feature is in a module that you can include as needed, or you can do what we're doing here and extend <tt>Test::Unit::Given::TestCase</tt> to get everything at once.
+
+== More Info
+
+* Test::Unit::Given::TestCase is the base class that gives you everything
+* Test::Unit::Given::GivenWhenThen provides the Given/When/Then construct
+* Test::Unit::Given::TestThat provides +test_that+
+* Test::Unit::Given::Any provides the +any_string+ and friends.
+
+== Questions you might have
+
+=== Why?
+
+I'm tired of unreadable tests.  Tests should be good, clean code, and it shoud be easy to see what's being tested.  This is especially important when there is a lot of setup required to simulate something.
+
+I also don't believe we need to resort ot a lot of metaprogramming tricks just to get our tests in this shape.  RSpec, for example, creates strange constructs for things that are much more straightforward in plain Ruby.  I like Test::Unit, and with just a bit of helper methods, we can make nice, readable tests, using just Ruby.
 
 === What about mocks?
 
@@ -227,72 +161,39 @@ Again, things are a bit out of order, but if you invert Then and When, you'll st
       end
     end
 
-== Any
+=== Why Any instead of Faker?
 
-Our tests tend to have a lot of arbitrary or meaningless values.  They also have a lot of very important and meaningfule values.  Often both of these are expressed as literals in our code.  What the Any module gives you is the ability to hide arbitrary values behind a method call.  This will ensure that the values truly are arbitrary, and will also mean that any literals left in your tests are important.  For example, you might have a test like this:
+Faker is used by Any under the covers, but Faker has two problems:
 
+* We aren't _faking_ values, we're using _arbitrary_ values.  There's a difference semantically, even if the mechanics are the same
+* Faker requires too much typing to get arbitrary values.  I'd rather type +any_string+ than <tt>Faker::Lorem.words(1).join(' ')</tt>
 
-    def test_something
-      service = mock()
-      service.expects(:remote_call).with({ :method => 'process', :amount => 45.6}).returns(87)
-      object_under_test = ObjectUnderTest.new('foo',service)
+=== What about Factory Girl?
 
-      assert_equal 8700,object_under_test.doit
+Again, FactoryGirl goes through metaprogramming hoops to do something we can already do in Ruby: call methods.  The Any module is extensible, in that you can do stuff like <tt>any Person</tt>, but you can, and should, just use methods.  Any helps out with primitives that we tend to use a lot: numbers and strings.  It's just simpler and, with less moving parts, more predictable.  This means you spend more time on your tests than on your test infrastructure.
+
+=== What about not using the base class?
+
+To use Test::Unit::Given::Any on its own:
+
+    require 'test/unit/given/any'
+
+    class MyTest < Test::Unit::TestCase
+      include Test::Unit::Given::Any
     end
 
-What's being tested here?  What values are meaningfule and which aren't?  Let's apply Any to make it clear:
+To use Test::Unit::Given::GivenWhenThen on its own:
 
-    def test_something
-      service = mock()
-      service_return = any_int
-      service.expects(:remote_call).with({ :method => any_string, :amount => any_number}).returns(service_return)
-      object_under_test = ObjectUnderTest.new(any_string,service)
+    require 'test/unit/given/given_when_then'
 
-      assert_equal (service_return * 100),object_under_test.doit
+    class MyTest < Test::Unit::TestCase
+      include Test::Unit::Given::GivenWhenThen
     end
 
-*Now* it's clear that we're expecting our object under test to multiple the return of our service call by 100.  The only value that has any meaning to this test is the integer 100, and that's the only literal that's there.  Beauty.
+To use Test::Unit::Given::TestThat on its own:
 
-=== What about Faker or Sham?
+    require 'test/unit/given/test_that'
 
-They simply don't provide a concise API to do this, nor do they really communicate this concept.  We aren't passing _fake_ strings or numbers, we're passing *arbitrary* strings and numbers.  It's worth making that clear in our tests that certainly values that must not be nil, don't matter to the test.  That they are random each time keeps us honest.
-
-=== What if I need some sort of restriction?
-
-Two ways to do that.  The built-in any_* methods provide limited options:
-
-    def test_truncate
-      person = Person.new
-      person.name = any_string :min => 256
-      person.age = any_int :positive
-      person.save!
-      assert_equal 255,person.name.length
+    class MyTest < Test::Unit::TestCase
+      include Test::Unit::Given::TestThat
     end
-
-The second way is to create your own any:
-
-    def setup
-      new_any :age do |options|
-        age = any_number % 80
-        age += 18 if options == :adult
-        age
-      end
-    end
-
-    def test_truncate
-      person = Person.new
-      person.name = any_string :min => 256
-      person.age = any :age, :adult
-      person.save!
-      assert_equal 255,person.name.length
-    end
-
-
-== WTF?  Why?
-
-Just because you're using Test::Unit doesn't mean you can't write fluent, easy to understand tests.
-You really don't need RSpec, and RSpec has some baggage, such as nonstandard assignment, confusing class_eval
-blocks, and generally replaces stuff you can do in plain Ruby.  Here, everything is simple, plain Ruby.  No
-magic, nothing to understand. 
-
-If you like Test::Unit, and you want to make your tests a bit more readable, this is for you.

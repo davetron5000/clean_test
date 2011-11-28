@@ -1,14 +1,17 @@
 require 'test/unit'
-require 'test/unit/given/simple'
+require 'test/unit/given/given_when_then'
 require 'test/unit/given/any'
 require 'test/unit/given/test_that'
 
-module Test
-  module Unit
-    module Given
-      # Public: A Base class brings in both the Simple Given/Then/When
-      # stuff as well as the +test_that+ method you can
-      # use to define tests a bit more fluently.
+module Test #:nodoc:
+  module Unit #:nodoc:
+    module Given #:nodoc:
+      # Public: A Base class brings in all modules that are part
+      # of Test::Unit Given, including:
+      #
+      # - TestThat
+      # - Any
+      # - GivenWhenThen
       #
       # Example
       #
@@ -20,7 +23,7 @@ module Test
       #       }
       #     end
       class TestCase < Test::Unit::TestCase
-        include Simple
+        include GivenWhenThen
         include TestThat
         include Any
         if RUBY_VERSION =~ /^1\.8\./

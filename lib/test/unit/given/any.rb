@@ -1,8 +1,8 @@
 require 'faker'
 
-module Test
-  module Unit
-    module Given
+module Test #:nodoc:
+  module Unit #:nodoc:
+    module Given #:nodoc:
       # Public: Provides the ability to vend arbitrary values without using literals, or
       # long calls to Faker.  This has two levels of utility:
       #
@@ -12,8 +12,42 @@ module Test
       #
       # any sort of any - you can define your own "any" values by using #new_any, which allows you to 
       #                   extend things if you like.  Of course, you could just make your own any_method as well.
+      #
+      # Example:
+      #
+      #     class Person
+      #       def initialize(first_name,last_name,age)
+      #         # ...
+      #       end
+      #     end
+      #
+      #     test_that "someone under 18 is a minor" {
+      #       Given {
+      #         # First name and last name aren't relevant to the test
+      #         @person = Person.new(any_string,any_string,17)
+      #       }
+      #       When {
+      #         @minor = @person.minor?
+      #       }
+      #       Then {
+      #         assert @minor
+      #       }
+      #     }
+      #
+      #     test_that "full_name gives the full name" {
+      #       Given {
+      #         # Age isn't relevant; it just needs to be positive
+      #         @person = Person.new("Dave","Copeland",any_int :positive)
+      #       }
+      #       When {
+      #         @full_name = @person.full_name
+      #       }
+      #       Then {
+      #         assert_equal "Dave Copeland",@full_namej
+      #       }
+      #     }
       module Any
-        MAX_RAND = 50000
+        MAX_RAND = 50000 # :nodoc:
 
         # Public: Get any number; one that doesn't matter
         #
@@ -32,8 +66,8 @@ module Test
         # Public: Get an arbitrary string of any potential length (the real max is 2048 characters if you don't override it)
         #
         # options - options to control the returned string
-        #           :max the max size of the string you want
-        #           :min the minimum size we want to come back
+        #           +:max+ - the max size of the string you want
+        #           +:min+ - the minimum size we want to come back
         #
         # Example
         #
