@@ -1,8 +1,8 @@
 require 'faker'
 
-module Test #:nodoc:
-  module Unit #:nodoc:
-    module Given #:nodoc:
+module Test # :nodoc:
+  module Unit # :nodoc:
+    module Given # :nodoc:
       # Public: Provides the ability to vend arbitrary values without using literals, or
       # long calls to Faker.  This has two levels of utility:
       #
@@ -65,9 +65,9 @@ module Test #:nodoc:
 
         # Public: Get an arbitrary string of any potential length (the real max is 2048 characters if you don't override it)
         #
-        # options - options to control the returned string
-        #           +:max+ - the max size of the string you want
-        #           +:min+ - the minimum size we want to come back
+        # options - options to control the returned string:
+        #           :max - the max size of the string you want
+        #           :min - the minimum size we want to come back
         #
         # Example
         #
@@ -121,7 +121,7 @@ module Test #:nodoc:
           @anies ||= default_anies
         end
 
-        ANY_STRING = Proc.new do |options|
+        ANY_STRING = Proc.new do |options| # :nodoc:
           max_size = options[:max] || rand(2048)
           min_size = options[:min] || rand(1024)
           min_size = max_size if min_size > max_size
@@ -138,7 +138,7 @@ module Test #:nodoc:
           string[0..(max_size-1)]
         end
 
-        ANY_NUMBER = Proc.new do |options|
+        ANY_NUMBER = Proc.new do |options| # :nodoc:
           number = (rand(2 * MAX_RAND) - MAX_RAND).to_f/100.0
           if options.include? :positive
             number + MAX_RAND
@@ -149,7 +149,7 @@ module Test #:nodoc:
           end
         end
 
-        ANY_INT = Proc.new do |options|
+        ANY_INT = Proc.new do |options| # :nodoc:
           (ANY_NUMBER.call(options)).to_i
         end
 

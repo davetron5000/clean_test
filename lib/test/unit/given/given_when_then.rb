@@ -1,6 +1,6 @@
-module Test #:nodoc:
-  module Unit #:nodoc:
-    module Given #:nodoc:
+module Test # :nodoc:
+  module Unit # :nodoc:
+    module Given # :nodoc:
       # A means of documenting the parts of your test code according
       # to the class "Given/When/Then" system.
       # This does no enforcement of any kind and is merely documentation to make

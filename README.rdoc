@@ -78,7 +78,7 @@ What's going on here?
 * We can see which values are relevant to the test - only those that are literals.  In the first test, the +name+ of our circle is not relevant to the test, so instead of using a dummy value like +foo+, we use +any_string+, which makes it clear that the value _does not matter_.  Similarly, in the second test, the radius is irrelevant, so we use +any_int+ to signify that it doesn't matter.
 * Our tests are clearly named and described with strings, but we didn't need to bring in active support.
 
-But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts you like.  Each feature is in a module that you can include as needed, or you can do what we're doing here and extend <tt>Test::Unit::Given::TestCase</tt> to get everything at once.
+But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts you like.  Each feature is in a module that you can include as needed, or you can do what we're doing here and extend Test::Unit::Given::TestCase to get everything at once.
 
 == More Info
 
@@ -94,6 +94,17 @@ But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts
 I'm tired of unreadable tests.  Tests should be good, clean code, and it shoud be easy to see what's being tested.  This is especially important when there is a lot of setup required to simulate something.
 
 I also don't believe we need to resort ot a lot of metaprogramming tricks just to get our tests in this shape.  RSpec, for example, creates strange constructs for things that are much more straightforward in plain Ruby.  I like Test::Unit, and with just a bit of helper methods, we can make nice, readable tests, using just Ruby.
+
+=== But the test methods are longer!
+
+And?  I don't mind a test method that's a bit longer if that makes it easy to understand.  Certainly, a method like this is short:
+
+
+    def test_radius
+      assert_equal 314,Circle.new(10).radius
+    end
+
+But, we rarely get such simple methods *and* this test method isn't very modifiable; everything is on one line and it doesn't encourage re-use.  We can do better.
 
 === What about mocks?
 

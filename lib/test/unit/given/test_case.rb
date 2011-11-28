@@ -3,15 +3,11 @@ require 'test/unit/given/given_when_then'
 require 'test/unit/given/any'
 require 'test/unit/given/test_that'
 
-module Test #:nodoc:
-  module Unit #:nodoc:
-    module Given #:nodoc:
+module Test # :nodoc:
+  module Unit # :nodoc:
+    module Given # :nodoc:
       # Public: A Base class brings in all modules that are part
-      # of Test::Unit Given, including:
-      #
-      # - TestThat
-      # - Any
-      # - GivenWhenThen
+      # of Test::Unit Given.
       #
       # Example
       #
