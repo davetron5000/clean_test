@@ -1,7 +1,7 @@
 require 'bundler'
+gem 'rdoc' # I need to use the installed RDoc gem, not what comes with the system
 require 'rake/clean'
 require 'rake/testtask'
-gem 'rdoc' # I need to use the installed RDoc gem, not what comes with the system
 require 'rdoc/task'
 
 include Rake::DSL

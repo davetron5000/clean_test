@@ -1,7 +1,7 @@
 require 'test/unit'
-require 'test/unit/given'
+require 'clean_test/test_case'
 
-class TestSimpleGiven < Test::Unit::Given::TestCase
+class TestSimpleGiven < Clean::Test::TestCase
 
   def test_basics
     Given {

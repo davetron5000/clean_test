@@ -1,7 +1,7 @@
 require 'test/unit'
-require 'test/unit/given'
+require 'clean_test/test_case'
 
-class TestAny < Test::Unit::Given::TestCase
+class TestAny < Clean::Test::TestCase
   test_that {
     Given { random_seeded_for_negative_float }
     When  { @number = any_number }

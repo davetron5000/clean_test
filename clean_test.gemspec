@@ -1,18 +1,18 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "test/unit/given/version"
+require "clean_test/version"
 
 Gem::Specification.new do |s|
-  s.name        = "test_unit-given"
-  s.version     = Test::Unit::Given::VERSION
+  s.name        = "clean_test"
+  s.version     = Clean::Test::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["David Copeland"]
   s.email       = ["davetron5000@gmail.com"]
   s.homepage    = ""
-  s.summary     = %q{Use Given/When/Then in your Test::Unit tests}
-  s.description = %q{We don't need no stinkin' RSpec!  Get all the fluency you want in your Test::Unit tests, with no magic required, using straight Ruby syntax}
+  s.summary     = %q{Clean up your Test::Unit tests}
+  s.description = %q{You can easily make your plain Ruby Test::Unit test cases clean and clear with Given/When/Then, placeholder values, and textual descriptions without resorting to metaprogramming or complex frameworks.  Use as much or as little as you like}
 
-  s.rubyforge_project = "test_unit-given"
+  s.rubyforge_project = "clean_test"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
