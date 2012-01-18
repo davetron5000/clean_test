@@ -2,79 +2,93 @@ require 'test/unit'
 require 'clean_test/test_case'
 
 class TestAny < Clean::Test::TestCase
+
+  def setup
+    # Fix the seed to be the same all day so our tests are repeatable
+    srand((Time.now.to_i / (1000 * 60 * 60)))#.tap { |_| puts "seed: #{_}" })
+  end
+
   test_that {
-    Given { random_seeded_for_negative_float }
     When  { @number = any_number }
-    Then { 
-      assert @number < 0,"any_number should be negative, but we got #{@number}" 
-      assert @number.to_i != @number,"Expected a float"
-    }
-  }
-  test_that {
-    Given { random_seeded_for_positive }
-    When  { @number = any_number }
-    Then  { assert @number > 0,"any_number should be positive, but we got #{@number}" }
+    Then  { assert_not_nil @number } 
   }
 
   test_that {
-    Given { random_seeded_for_negative_float }
     When  { @number = any_number :positive }
     Then  { assert @number > 0,"We specified :positive, but got a negative" }
   }
 
   test_that {
-    Given { random_seeded_for_positive }
     When  { @number = any_number :negative }
     Then  { assert @number < 0,"We specified :negative, but got a positive" }
   }
 
   test_that {
-    Given { random_seeded_for_negative_float }
     When  { @number = any_int }
     Then  { 
-      assert @number < 0,"Expected int to be negative"
+      assert_not_nil @number
       assert_equal @number.to_i,@number,"Expected an int, not a #{@number.class}" 
     }
   }
 
   test_that {
-    Given { random_seeded_for_negative_float }
     When  { @int = any_int :positive }
     Then  { assert @int > 0,"We specified :positive, but got a negative" }
   }
 
   test_that {
-    Given { random_seeded_for_positive }
     When  { @int = any_int :negative }
     Then  { assert @int < 0,"We specified :negative, but got a positive" }
   }
 
   test_that {
-    Given { random_seeded_for_long_string }
     When  { @string = any_string }
     Then  { 
-      assert @string.length < 1441,"expected less than our rand value, but got #{@string.length}" 
+      assert_not_nil @string
       assert_equal String,@string.class
     }
   }
 
   test_that {
-    Given { random_seeded_for_long_string }
     When  { @string = any_string :max => 255 }
     Then  { 
-      assert @string.length <= 255,"Expected a string of less than 256 characters, got #{@string.length}" 
       assert_equal String,@string.class
+      assert @string.length <= 255,"Expected a string of less than 256 characters, got #{@string.length}" 
     }
   }
 
   test_that {
-    Given { random_seeded_for_long_string }
     When  { @string = any_string :min => 1000 }
     Then  { 
-      assert @string.length > 1000,"Expected a string of at least 1500 characters, got one of #{@string.length} characters" 
       assert_equal String,@string.class
+      assert @string.length > 1000,"Expected a string of at least 1001 characters, got one of #{@string.length} characters" 
     }
   }
+
+  test_that "min and max must agree" do
+    When {
+      @code = lambda { @string = any_string :min => 10, :max => 3 }
+    }
+    Then {
+      assert_raises(RuntimeError,&@code)
+    }
+  end
+
+  [
+    [-10,  1],
+    [  0,  1],
+    [  0,  0],
+    [  0,-10],
+  ].each do |(min,max)|
+    test_that "both min and max must be positive (#{min},#{max})" do
+      When {
+        @code = lambda { @string = any_string :min => min, :max => max }
+      }
+      Then {
+        assert_raises(RuntimeError,&@code)
+      }
+    end
+  end
 
   test_that {
     When { @sentence = any_sentence }
@@ -142,25 +156,4 @@ class TestAny < Clean::Test::TestCase
       }
     end
   end
-
-  private
-
-  def random_seeded_for_long_string
-    srand(34)
-  end
-
-  def random_seeded_for_negative_float
-    srand(45)
-  end
-
-  def random_seeded_for_positive
-    # Oh yeah.  Really, I think this whole test case
-    # might should be done differently.  Need to think about how
-    if RUBY_VERSION =~ /^1.8/
-      rand(3)
-    else
-      rand(2)
-    end
-  end
-
 end

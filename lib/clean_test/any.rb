@@ -138,16 +138,28 @@ module Clean #:nodoc:
       end
 
       ANY_STRING = Proc.new do |options| #:nodoc:
-        max_size = options[:max] || rand(2048)
-        min_size = options[:min] || rand(1024)
-        min_size = max_size if min_size > max_size
+        if options[:min] && options[:max]
+          raise ":min must be less than :max" if options[:min] > options[:max]
+        end
+        if options[:min]
+          raise ":min must be positive" if options[:min] < 1
+        end
 
-        size = rand(max_size)
+        min_size = options[:min]
+        max_size = options[:max]
 
-        size = min_size if size < min_size
+        if min_size.nil? && max_size.nil?
+          min_size = rand(1024) + 1
+          max_size = min_size + rand(1024)
+        elsif min_size.nil?
+          min_size = max_size - rand(max_size)
+          min_size = 1 if min_size < 1
+        else
+          max_size = min_size + rand(min_size) + 1
+        end
 
         string = Faker::Lorem.words(1).join('')
-        while string.length < size
+        while string.length < min_size
           string += Faker::Lorem.words(1).join('') 
         end
 
