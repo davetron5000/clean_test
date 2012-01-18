@@ -76,6 +76,22 @@ class TestAny < Clean::Test::TestCase
     }
   }
 
+  test_that {
+    When { @sentence = any_sentence }
+    Then { assert @sentence.split(/\s/).size > 10,@sentence }
+  }
+
+  test_that {
+    When { @sentence = any_sentence :max => 5 }
+    Then { assert @sentence.split(/\s/).size <= 5,@sentence }
+  }
+
+  test_that {
+    When { @sentence = any_sentence :min => 20 }
+    Then { assert @sentence.split(/\s/).size >= 20,@sentence }
+  }
+
+
   test_that "we can register custom anys" do 
     Given {
       new_any :foo do

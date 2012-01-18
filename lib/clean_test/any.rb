@@ -77,6 +77,23 @@ module Clean #:nodoc:
         any :string,options
       end
 
+      # Public: Get an arbitrary sentence of arbitrary words of any potential length.  Currently,
+      # this returns a sentence between 10 and 21 words, though you can control that with options
+      #
+      # options - options to control the returned sentence
+      #           :max - the maximum number of words you want returned
+      #           :min - the minimum number of words you want returned; the sentence will be between
+      #                  :min and (:min + 10) words
+      #
+      # Example
+      #
+      #     any_sentence :min => 20  # at least a 20-word sentence
+      #     any_sentence :max => 4   # no more than four words
+      #
+      def any_sentence(options = {})
+        any :sentence,options
+      end
+
       # Public: Get a predefined, arbitrary any.  
       #
       # sym - the any that has been defined already.  By default, the following are defined:
@@ -148,6 +165,21 @@ module Clean #:nodoc:
         end
       end
 
+      ANY_SENTENCE = Proc.new do |options| #:nodoc:
+        min = 11
+        max = 21
+
+        if options[:max]
+          min = 1
+          max = options[:max]
+        elsif options[:min]
+          min = options[:min]
+          max = min + 10
+        end
+
+        Faker::Lorem.words(rand(max - min) + min).join(' ')
+      end
+
       ANY_INT = Proc.new do |options| #:nodoc:
         (ANY_NUMBER.call(options)).to_i
       end
@@ -161,6 +193,7 @@ module Clean #:nodoc:
           :int => ANY_INT,
           Fixnum => ANY_INT,
           Integer => ANY_INT,
+          :sentence => ANY_SENTENCE,
         }
       end
     end
