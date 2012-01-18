@@ -1,7 +1,7 @@
-= Test::Unit Given
+= Clean Tests
 
 Author::  Dave Copeland (mailto:davetron5000 at g mail dot com)
-Copyright:: Copyright (c) 2011 by Dave Copeland
+Copyright:: Copyright (c) 2012 by Dave Copeland
 License:: Distributes under the Apache License, see LICENSE.txt in the source distro
 
 Get your Test::Unit test cases readable and fluent, without RSpec, magic, or crazy meta-programming.
@@ -11,16 +11,16 @@ This library is a set of small, simple tools to make your Test::Unit test cases 
 The main problems this library solves are:
 
 * Understanding what part of a test method is setup, test, and evaluation
-* Understanding what elements of a test are relevant, and which are arbitrary
-* Using strings to describe your tests without requiring active support
+* Understanding what elements of a test are relevant to the test, and which are arbitrary placeholders
+* Removing the requirement that your tests are method names
 
 == Install
 
-    gem install test_unit-given
+    gem install clean_test
 
 Or, with bundler:
 
-    gem "test_unit-given", :require => "test/unit/given"
+    gem "clean_test", :require => false
 
 == Overview
 
@@ -43,9 +43,9 @@ Or, with bundler:
 
     end
 
-    require 'test/unit/given'
+    require 'clean_test/test_case'
 
-    class CircleTest < Test::Unit::Given::TestCase
+    class CircleTest < Clean::Test::TestCase
       test_that "area is computed correctly" {
         Given {
           @circle = Circle.new(10,any_string)
@@ -75,17 +75,18 @@ Or, with bundler:
 What's going on here?
 
 * We can clearly see which parts of our test are setting things up (stuff inside +Given+), which parts are executing the code we're testing (stuff in +When+) and which parts are evalulating the results (stuff in +Then+)
-* We can see which values are relevant to the test - only those that are literals.  In the first test, the +name+ of our circle is not relevant to the test, so instead of using a dummy value like +foo+, we use +any_string+, which makes it clear that the value _does not matter_.  Similarly, in the second test, the radius is irrelevant, so we use +any_int+ to signify that it doesn't matter.
+* We can see which values are relevant to the test - only those that are literals.  In the first test, the +name+ of our circle is not relevant to the test, so instead of using a dummy value like <tt>"foo"</tt>, we use +any_string+, which makes it clear that the value <i>does not matter</i>.  Similarly, in the second test, the radius is irrelevant, so we use +any_int+ to signify that it doesn't matter.
 * Our tests are clearly named and described with strings, but we didn't need to bring in active support.
+* A side effect of this structure is that we use instance vars to pass data between Given/When/Then blocks. This means that instance vars "jump out" as important variables to the test; non-instance vars "fade away" into the background.
 
-But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts you like.  Each feature is in a module that you can include as needed, or you can do what we're doing here and extend Test::Unit::Given::TestCase to get everything at once.
+But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts you like.  Each feature is in a module that you can include as needed, or you can do what we're doing here and extend Clean::Test::TestCase to get everything at once.
 
 == More Info
 
-* Test::Unit::Given::TestCase is the base class that gives you everything
-* Test::Unit::Given::GivenWhenThen provides the Given/When/Then construct
-* Test::Unit::Given::TestThat provides +test_that+
-* Test::Unit::Given::Any provides the +any_string+ and friends.
+* Clean::Test::TestCase is the base class that gives you everything
+* Clean::Test::GivenWhenThen provides the Given/When/Then construct
+* Clean::Test::TestThat provides +test_that+
+* Clean::Test::Any provides the +any_string+ and friends.
 
 == Questions you might have
 
@@ -154,23 +155,151 @@ Yes, this makes our test a bit longer, but it's *much* more clear.
 
 === What about block-based assertions, like +assert_raises+
 
-Again, things are a bit out of order, but if you invert Then and When, you'll still get a readable test:
+Again, things are a bit out of order in a class test case, but you can clean this up without this library or any craziness, by just using Ruby:
 
-    class CircleTest < Test::Unit::Given::TestCase
+    class CircleTest < Clean::Test::TestCase
 
       test_that "there is no diameter method" do
         Given {
           @circle = Circle.new(10)
         }
+        When {
+          @code = lambda { @circle.diameter }
+        }
         Then {
-          assert_raises NoMethodError do
-            When {
-              @circle.diameter
-            }
-          end
+          assert_raises(NoMethodError,&@code)
         }
       end
     end
+
+=== My tests require a lot of setup, so I use contexts in shoulda/RSpec.  What say you?
+
+Duplicated setup can be tricky.  A problem with heavily nested contexts in Shoulda or RSpec is that it can be hard to piece together what all the "Givens" of a particular test actually are.  As a reaction to this, a lot of developers tend to just duplicate setup code, so that each test "stands on its own".  This makes adding features or changing things difficult, because it's not clear what duplicated code is the same by happenstance, or the same because it's *supposed* to be the same.
+
+To deal with this, we simply use Ruby and <i>method extraction</i>.  Let's say we have a +Salutation+ class that takes a +Person+ and a +Language+ in its constructor, and then provides methods to "greet" that person
+
+    class Salutation
+      def initialize(person,language)
+        raise "person required" if person.nil?
+        raise "language required" if language.nil?
+      end
+
+      # ... methods
+    end
+
+To test this class, we always need a non-nil person and language.  We might end up with code like this:
+
+    class SalutationTest << Clean::Test::TestCase
+      test_that "greeting works" do
+        Given {
+          person = Person.new("David","Copeland",:male)
+          language = Language.new("English","en")
+          @salutation = Salutation.new(person,language)
+        }
+        When { 
+          @greeting = @salutation.greeting
+        }
+        Then {
+          assert_equal "Hello, David!",@salutation.greeting
+        }
+      end
+
+      test_that "greeting works for no first name" do
+        Given {
+          person = Person.new(nil,"Copeland",:male)
+          language = Language.new("English","en")
+          @salutation = Salutation.new(person,language)
+        }
+        When { 
+          @greeting = @salutation.greeting
+        }
+        Then {
+          assert_equal "Hello, Mr. Copeland!",@salutation.greeting
+        }
+      end
+    end
+
+In both cases, the language is the same, and the person is slightly different.  Method extraction:
+
+    class SalutationTest << Clean::Test::TestCase
+      test_that "greeting works" do
+        Given {
+          @salutation = Salutation.new(male_with_first_name("David"),english)
+        }
+        When { 
+          @greeting = @salutation.greeting
+        }
+        Then {
+          assert_equal "Hello, David!",@salutation.greeting
+        }
+      end
+
+      test_that "greeting works for no first name" do
+        Given {
+          @salutation = Salutation.new(male_with_no_first_name("Copeland"),english)
+        }
+        When { 
+          @greeting = @salutation.greeting
+        }
+        Then {
+          assert_equal "Hello, Mr. Copeland!",@salutation.greeting
+        }
+      end
+
+    private
+      def male_with_first_name(first_name)
+        Person.new(first_name,any_string,:male)
+      end
+
+      def male_with_no_first_name(last_name)
+        Person.new(nil,last_name,:male)
+      end
+
+      def english; Language.new("English","en"); end
+    end
+
+=== What did that have to do with this gem?
+
+Nothing.  That's the point.  You have the power already.  Note that, since +Given+ takes a block, you can re-use things that way, if you like:
+
+    class SalutationTest << Clean::Test::TestCase
+      test_that "greeting works" do
+        Given english_salutation_for(male_with_first_name("David")
+        When { 
+          @greeting = @salutation.greeting
+        }
+        Then {
+          assert_equal "Hello, David!",@salutation.greeting
+        }
+      end
+
+      test_that "greeting works for no first name" do
+        Given english_salutation_for(male_with_first_name("Copeland")
+        When { 
+          @greeting = @salutation.greeting
+        }
+        Then {
+          assert_equal "Hello, Mr. Copeland!",@salutation.greeting
+        }
+      end
+
+    private
+      def male_with_first_name(first_name)
+        Person.new(first_name,any_string,:male)
+      end
+
+      def male_with_no_first_name(last_name)
+        Person.new(nil,last_name,:male)
+      end
+
+      def english_salutation_for(person)
+        lambda {
+          @salutation = Salutation.new(person,Language.new("English","en"))
+        }
+      end
+    end
+
+This sort of thing can get confusing, but sometimes works well.
 
 === Why Any instead of Faker?
 
@@ -181,30 +310,32 @@ Faker is used by Any under the covers, but Faker has two problems:
 
 === What about Factory Girl?
 
-Again, FactoryGirl goes through metaprogramming hoops to do something we can already do in Ruby: call methods.  The Any module is extensible, in that you can do stuff like <tt>any Person</tt>, but you can, and should, just use methods.  Any helps out with primitives that we tend to use a lot: numbers and strings.  It's just simpler and, with less moving parts, more predictable.  This means you spend more time on your tests than on your test infrastructure.
+Again, FactoryGirl goes through metaprogramming hoops to do something we can already do in Ruby: call methods.  Factory Girl also places factories in global scope, making tests more brittle.  You either have a ton of tests depending on the same factory or you have test-specific factories, all in global scope.  It's just simpler and more maintainable to use methods and modules for this.  To re-use "factories" produced by simple methods, just put them in a module.
+
+Further, the +Any+ module is extensible, in that you can do stuff like <tt>any Person</tt>, but you can, and should, just use methods.  Any helps out with primitives that we tend to use a lot: numbers and strings.  It's just simpler and, with less moving parts, more predictable.  This means you spend more time on your tests than on your test infrastructure.
 
 === What about not using the base class?
 
-To use Test::Unit::Given::Any on its own:
+To use Any on its own:
 
-    require 'test/unit/given/any'
+    require 'clean_test/any'
 
     class MyTest < Test::Unit::TestCase
-      include Test::Unit::Given::Any
+      include Clean::Test::Any
     end
 
-To use Test::Unit::Given::GivenWhenThen on its own:
+To use GivenWhenThen on its own:
 
-    require 'test/unit/given/given_when_then'
+    require 'clean_test/given_when_then'
 
     class MyTest < Test::Unit::TestCase
-      include Test::Unit::Given::GivenWhenThen
+      include Clean::Test::GivenWhenThen
     end
 
-To use Test::Unit::Given::TestThat on its own:
+To use TestThat on its own:
 
-    require 'test/unit/given/test_that'
+    require 'clean_test/test_that'
 
     class MyTest < Test::Unit::TestCase
-      include Test::Unit::Given::TestThat
+      include Clean::Test::TestThat
     end

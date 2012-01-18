@@ -1,5 +1,5 @@
 require 'simplecov'
 SimpleCov.start do
-  add_filter "/test_*.rb"
+  add_filter "/test/*.rb"
 end
 
