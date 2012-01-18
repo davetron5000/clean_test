@@ -48,14 +48,32 @@ module Clean #:nodoc:
           define_method(test_name, &block)
         end
 
+        # Public: Create a test that you don't want to actually run.
+        # This can be handy if you want to temporarily keep a test from
+        # running, but don't want to deal with comments or if (false) blocks.
+        # Tests skipped this way will generate a warning to the standard error.
+        # Arguments are indentical to #test_that
+        def skip_a_test_that(description=nil,&block)
+          description = make_up_name(block) if description.nil?
+          STDERR.puts "warning: test 'test that #{description}' is being skipped" unless $FOR_TESTING_ONLY_SKIP_STDERR
+        end
+
+        # Public: Create a test that is pending or that you intend to implement soon.
+        # This can be handy for sketching out some tests that you want, as this will
+        # print the pending tests to the standard error
+        def someday_test_that(description=nil,&block)
+          description = make_up_name(block) if description.nil?
+          STDERR.puts "warning: test 'test that #{description}' is pending" unless $FOR_TESTING_ONLY_SKIP_STDERR
+        end
+
         private 
 
         def make_up_name(some_proc)
           if some_proc.respond_to? :source_location
             name,location = some_proc.source_location
-            "anonymous test at #{name}, line #{location}"
+            "anonymous test at #{name}, line #{location} passes"
           else
-            "anonymous test for proc #{some_proc.object_id}"
+            "anonymous test for proc #{some_proc.object_id} passes"
           end
         end
       end
