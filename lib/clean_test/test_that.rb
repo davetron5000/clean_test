@@ -1,5 +1,5 @@
-module Clean # :nodoc:
-  module Test # :nodoc:
+module Clean #:nodoc:
+  module Test #:nodoc:
     # Public: Module that, when included, makes a class method, +#test_that+ available
     # to create test methods in a more fluent way.  See ClassMethods.
     module TestThat

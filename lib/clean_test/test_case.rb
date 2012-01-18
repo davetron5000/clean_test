@@ -3,8 +3,8 @@ require 'clean_test/given_when_then'
 require 'clean_test/any'
 require 'clean_test/test_that'
 
-module Clean # :nodoc:
-  module Test # :nodoc:
+module Clean #:nodoc:
+  module Test #:nodoc:
     # Public: A Base class brings in all modules that are part
     # of Clean::Test.
     #

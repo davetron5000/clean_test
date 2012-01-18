@@ -1,5 +1,5 @@
-module Clean # :nodoc:
-  module Test # :nodoc:
+module Clean #:nodoc:
+  module Test #:nodoc:
     # A means of documenting the parts of your test code according
     # to the class "Given/When/Then" system.
     # This does no enforcement of any kind and is merely documentation to make
@@ -160,7 +160,7 @@ module Clean # :nodoc:
         lambda {}
       end
 
-      # Public: Similar to #test_runs, this is used to make clear what
+      # Public: Similar to #the_test_runs, this is used to make clear what
       # you are testing and what the assertions are.  Since many Ruby mock
       # frameworks do not require an explicit "verify" step, you often have tests
       # that have no explicit asserts, the assertions being simply that the mocks were called

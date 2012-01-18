@@ -1,7 +1,7 @@
 require 'faker'
 
-module Clean # :nodoc:
-  module Test # :nodoc:
+module Clean #:nodoc:
+  module Test #:nodoc:
     # Public: Provides the ability to vend arbitrary values without using literals, or
     # long calls to Faker.  This has two levels of utility:
     #
@@ -46,7 +46,7 @@ module Clean # :nodoc:
     #       }
     #     }
     module Any
-      MAX_RAND = 50000 # :nodoc:
+      MAX_RAND = 50000 #:nodoc:
 
       # Public: Get any number; one that doesn't matter
       #
@@ -120,7 +120,7 @@ module Clean # :nodoc:
         @anies ||= default_anies
       end
 
-      ANY_STRING = Proc.new do |options| # :nodoc:
+      ANY_STRING = Proc.new do |options| #:nodoc:
         max_size = options[:max] || rand(2048)
         min_size = options[:min] || rand(1024)
         min_size = max_size if min_size > max_size
@@ -137,7 +137,7 @@ module Clean # :nodoc:
         string[0..(max_size-1)]
       end
 
-      ANY_NUMBER = Proc.new do |options| # :nodoc:
+      ANY_NUMBER = Proc.new do |options| #:nodoc:
         number = (rand(2 * MAX_RAND) - MAX_RAND).to_f/100.0
         if options.include? :positive
           number + MAX_RAND
@@ -148,7 +148,7 @@ module Clean # :nodoc:
         end
       end
 
-      ANY_INT = Proc.new do |options| # :nodoc:
+      ANY_INT = Proc.new do |options| #:nodoc:
         (ANY_NUMBER.call(options)).to_i
       end
 
