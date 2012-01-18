@@ -62,11 +62,11 @@ module Clean #:nodoc:
         any :int,options
       end
 
-      # Public: Get an arbitrary string of any potential length (the real max is 2048 characters if you don't override it)
+      # Public: Get an arbitrary string of any potential positive length
       #
       # options - options to control the returned string:
-      #           :max - the max size of the string you want
-      #           :min - the minimum size we want to come back
+      #           :max - the max size of the string you want, must be positive and greater than :min
+      #           :min - the minimum size we want to come back, must be positive and less than :max
       #
       # Example
       #

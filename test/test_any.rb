@@ -61,7 +61,7 @@ class TestAny < Clean::Test::TestCase
     When  { @string = any_string :min => 1000 }
     Then  { 
       assert_equal String,@string.class
-      assert @string.length > 1000,"Expected a string of at least 1001 characters, got one of #{@string.length} characters" 
+      assert @string.length >= 1000,"Expected a string of at least 1000 characters, got one of #{@string.length} characters" 
     }
   }
 
