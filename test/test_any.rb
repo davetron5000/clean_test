@@ -146,15 +146,21 @@ class TestAny < Clean::Test::TestCase
   private
 
   def random_seeded_for_long_string
-    Random.srand(34)
+    srand(34)
   end
 
   def random_seeded_for_negative_float
-    Random.srand(45)
+    srand(45)
   end
 
   def random_seeded_for_positive
-    Random.srand(2)
+    # Oh yeah.  Really, I think this whole test case
+    # might should be done differently.  Need to think about how
+    if RUBY_VERSION =~ /^1.8/
+      rand(3)
+    else
+      rand(2)
+    end
   end
 
 end
