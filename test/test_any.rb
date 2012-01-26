@@ -138,6 +138,17 @@ class TestAny < Clean::Test::TestCase
     }
   end
 
+  test_that "any_symbol works" do
+    When {
+      @symbol = any_symbol
+    }
+    Then {
+      assert_not_nil @symbol
+      assert @symbol.kind_of? Symbol
+      assert @symbol.to_s.length < 20
+    }
+  end
+
   [String,[Integer,Fixnum],Fixnum,Float,[Numeric,Float]].each do |klass|
     test_that "can get an any #{klass}" do 
       Given {

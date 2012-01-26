@@ -77,6 +77,13 @@ module Clean #:nodoc:
         any :string,options
       end
 
+      # Public: Get an arbitrary symbol, for example to use as a Hash key.  The symbol
+      # will be between 2 and 20 characters long.  If you need super-long symbols for some reason,
+      # use <code>any_string.to_sym</code>.
+      def any_symbol
+        (any_string :min => 2, :max => 20).to_sym
+      end
+
       # Public: Get an arbitrary sentence of arbitrary words of any potential length.  Currently,
       # this returns a sentence between 10 and 21 words, though you can control that with options
       #
