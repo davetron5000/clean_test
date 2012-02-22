@@ -156,8 +156,8 @@ module Clean #:nodoc:
         max_size = options[:max]
 
         if min_size.nil? && max_size.nil?
-          min_size = rand(1024) + 1
-          max_size = min_size + rand(1024)
+          min_size = rand(80) + 1
+          max_size = min_size + rand(80)
         elsif min_size.nil?
           min_size = max_size - rand(max_size)
           min_size = 1 if min_size < 1
@@ -165,9 +165,9 @@ module Clean #:nodoc:
           max_size = min_size + rand(min_size) + 1
         end
 
-        string = Faker::Lorem.words(1).join('')
+        string = Faker::Lorem.words(1).join(' ')
         while string.length < min_size
-          string += Faker::Lorem.words(1).join('') 
+          string += Faker::Lorem.words(1).join(' ') 
         end
 
         string[0..(max_size-1)]

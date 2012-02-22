@@ -264,7 +264,7 @@ Nothing.  That's the point.  You have the power already.  Note that, since +Give
 
     class SalutationTest << Clean::Test::TestCase
       test_that "greeting works" do
-        Given english_salutation_for(male_with_first_name("David")
+        Given english_salutation_for(male_with_first_name("David"))
         When { 
           @greeting = @salutation.greeting
         }
@@ -274,7 +274,7 @@ Nothing.  That's the point.  You have the power already.  Note that, since +Give
       end
 
       test_that "greeting works for no first name" do
-        Given english_salutation_for(male_with_first_name("Copeland")
+        Given english_salutation_for(male_with_first_name("Copeland"))
         When { 
           @greeting = @salutation.greeting
         }
@@ -313,6 +313,16 @@ Faker is used by Any under the covers, but Faker has two problems:
 Again, FactoryGirl goes through metaprogramming hoops to do something we can already do in Ruby: call methods.  Factory Girl also places factories in global scope, making tests more brittle.  You either have a ton of tests depending on the same factory or you have test-specific factories, all in global scope.  It's just simpler and more maintainable to use methods and modules for this.  To re-use "factories" produced by simple methods, just put them in a module.
 
 Further, the +Any+ module is extensible, in that you can do stuff like <tt>any Person</tt>, but you can, and should, just use methods.  Any helps out with primitives that we tend to use a lot: numbers and strings.  It's just simpler and, with less moving parts, more predictable.  This means you spend more time on your tests than on your test infrastructure.
+
+=== Any uses randome numnbers and strings.  Tests aren't repeatable!
+
+Sure they are.
+
+    def setup
+      Random.srand(0) # or whatever value
+    end
+
+Keep in mind that if _any_ value will work, random values shouldn't be a problem.
 
 === What about not using the base class?
 
