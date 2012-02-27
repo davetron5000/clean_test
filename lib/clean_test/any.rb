@@ -46,6 +46,16 @@ module Clean #:nodoc:
     #       }
     #     }
     module Any
+      def self.included(k)
+        seed = if ENV['RANDOM_SEED']
+                 ENV['RANDOM_SEED'].to_i
+               else
+                 srand() # generate random seed
+                 seed = srand() # save it (but we've now generated another one)
+               end
+        srand(seed) # set it explicitly
+        puts "Random seed was #{seed}; re-use it via environment variable RANDOM_SEED"
+      end
       MAX_RAND = 50000 #:nodoc:
 
       # Public: Get any number; one that doesn't matter
