@@ -94,7 +94,7 @@ But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts
 
 I'm tired of unreadable tests.  Tests should be good, clean code, and it shoud be easy to see what's being tested.  This is especially important when there is a lot of setup required to simulate something.
 
-I also don't believe we need to resort ot a lot of metaprogramming tricks just to get our tests in this shape.  RSpec, for example, creates strange constructs for things that are much more straightforward in plain Ruby.  I like Test::Unit, and with just a bit of helper methods, we can make nice, readable tests, using just Ruby.
+I also don't believe we need to resort to a lot of metaprogramming tricks just to get our tests in this shape.  RSpec, for example, creates strange constructs for things that are much more straightforward in plain Ruby.  I like Test::Unit, and with just a bit of helper methods, we can make nice, readable tests, using just Ruby.
 
 === But the test methods are longer!
 
@@ -314,7 +314,7 @@ Again, FactoryGirl goes through metaprogramming hoops to do something we can alr
 
 Further, the +Any+ module is extensible, in that you can do stuff like <tt>any Person</tt>, but you can, and should, just use methods.  Any helps out with primitives that we tend to use a lot: numbers and strings.  It's just simpler and, with less moving parts, more predictable.  This means you spend more time on your tests than on your test infrastructure.
 
-=== Any uses randome numnbers and strings.  Tests aren't repeatable!
+=== Any uses random numbers and strings.  Tests aren't repeatable!
 
 Sure they are.
 
