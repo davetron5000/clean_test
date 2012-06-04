@@ -104,9 +104,13 @@ module Clean #:nodoc:
         end
       end
 
+      # Public: Execute the code under test.  Behavior identical to Given
       alias :When :Given
+      # Public: Assert the results of the test. Behavior identical to Given
       alias :Then :Given
+      # Public: Extend a Given/When/Then when using method or lambda form. Behavior identical to Given
       alias :And :Given
+      # Public: Extend a Given/When/Then when using method or lambda form. Behavior identical to Given
       alias :But :Given
 
       # Public: Used to make clear the structure of tests using mocks.
