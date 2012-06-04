@@ -1,0 +1,447 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Clean test by davetron5000</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Clean test</h1>
+        <p>Write clean, understandable tests in Test::Unit</p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/davetron5000/clean_test" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/davetron5000/clean_test/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/davetron5000/clean_test/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Clean Tests</h1>
+
+<ul>
+<li>Author - Dave Copeland (mailto:davetron5000 at g mail dot com)</li>
+<li>Copyright - Copyright (c) 2012 by Dave Copeland</li>
+<li>License - Distributes under the Apache License, see LICENSE.txt in the source distro</li>
+</ul><p>Get your Test::Unit test cases readable and fluent, without RSpec, magic, or crazy meta-programming.</p>
+
+<p>This library is a set of small, simple tools to make your Test::Unit test cases easy to understand.  This isn't a massive change in how you write tests, but simply some helpful things will make your tests easier to read.</p>
+
+<ul>
+<li><a href="http://www.github.com/davetron5000/clean_test">Source</a></li>
+<li><a href="http://davetron5000.github.com/clean_test/rdoc">RDoc</a></li>
+</ul><p>The main problems this library solves are:</p>
+
+<ul>
+<li>Understanding what part of a test method is setup, test, and evaluation</li>
+<li>Understanding what elements of a test are relevant to the test, and which are arbitrary placeholders</li>
+<li>Removing the requirement that your tests are method names</li>
+</ul><h2>Install</h2>
+
+<pre><code>gem install clean_test
+</code></pre>
+
+<p>Or, with bundler:</p>
+
+<pre><code>gem "clean_test", :require =&gt; false
+</code></pre>
+
+<h2>Overview</h2>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">Circle</span>
+  <span class="kp">attr_reader</span> <span class="ss">:name</span>
+  <span class="kp">attr_reader</span> <span class="ss">:radius</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span><span class="nb">name</span><span class="p">)</span>
+    <span class="vi">@radius</span> <span class="o">=</span> <span class="n">radius</span>
+    <span class="vi">@name</span> <span class="o">=</span> <span class="nb">name</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">area</span>
+    <span class="vi">@radius</span> <span class="o">*</span> <span class="vi">@radius</span> <span class="o">*</span> <span class="mi">3</span><span class="o">.</span><span class="mi">14</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">to_s</span>
+    <span class="s2">"circle of radius </span><span class="si">#{</span><span class="n">radius</span><span class="si">}</span><span class="s2">, named </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
+  <span class="k">end</span>
+
+<span class="k">end</span>
+
+<span class="nb">require</span> <span class="s1">'clean_test/test_case'</span>
+
+<span class="k">class</span> <span class="nc">CircleTest</span> <span class="o">&lt;</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="n">test_that</span> <span class="s2">"area is computed correctly"</span> <span class="p">{</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="vi">@circle</span> <span class="o">=</span> <span class="no">Circle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">any_string</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="p">{</span>
+      <span class="vi">@area</span> <span class="o">=</span> <span class="vi">@circle</span><span class="o">.</span><span class="n">area</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_equal</span> <span class="mi">314</span><span class="p">,</span><span class="vi">@area</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">test_that</span> <span class="s2">"to_s includes the name"</span> <span class="p">{</span>
+    <span class="no">Given</span> <span class="p">{</span> 
+      <span class="vi">@name</span> <span class="o">=</span> <span class="s2">"foo"</span>
+      <span class="vi">@circle</span> <span class="o">=</span> <span class="no">Circle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">any_int</span><span class="p">,</span><span class="vi">@name</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="p">{</span>
+      <span class="vi">@string</span> <span class="o">=</span> <span class="vi">@circle</span><span class="o">.</span><span class="n">to_s</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_match</span> <span class="sr">/</span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="sr">/</span><span class="p">,</span><span class="vi">@string</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>What's going on here?</p>
+
+<ul>
+<li>We can clearly see which parts of our test are setting things up (stuff inside <code>Given</code>), which parts are executing the code we're testing (stuff in <code>When</code>) and which parts are evalulating the results (stuff in <code>Then</code>)</li>
+<li>We can see which values are relevant to the test - only those that are literals.  In the first test, the <code>name</code> of our circle is not relevant to the test, so instead of using a dummy value like <tt>"foo"</tt>, we use <code>any_string</code>, which makes it clear that the value <i>does not matter</i>.  Similarly, in the second test, the radius is irrelevant, so we use <code>any_int</code> to signify that it doesn't matter.</li>
+<li>Our tests are clearly named and described with strings, but we didn't need to bring in active support.</li>
+<li>A side effect of this structure is that we use instance vars to pass data between Given/When/Then blocks. This means that instance vars "jump out" as important variables to the test; non-instance vars "fade away" into the background.</li>
+</ul><p>But, don't fret, this is not an all-or-nothing proposition.  Use whichever parts you like.  Each feature is in a module that you can include as needed, or you can do what we're doing here and extend Clean::Test::TestCase to get everything at once.</p>
+
+<h2>More Info</h2>
+
+<ul>
+<li>Clean::Test::TestCase is the base class that gives you everything</li>
+<li>Clean::Test::GivenWhenThen provides the Given/When/Then construct</li>
+<li>Clean::Test::TestThat provides <code>test_that</code>
+</li>
+<li>Clean::Test::Any provides the <code>any_string</code> and friends.</li>
+</ul><h2>Questions you might have</h2>
+
+<h3>Why?</h3>
+
+<p>I'm tired of unreadable tests.  Tests should be good, clean code, and it shoud be easy to see what's being tested.  This is especially important when there is a lot of setup required to simulate something.</p>
+
+<p>I also don't believe we need to resort to a lot of metaprogramming tricks just to get our tests in this shape.  RSpec, for example, creates strange constructs for things that are much more straightforward in plain Ruby.  I like Test::Unit, and with just a bit of helper methods, we can make nice, readable tests, using just Ruby.</p>
+
+<h3>But the test methods are longer!</h3>
+
+<p>And?  I don't mind a test method that's a bit longer if that makes it easy to understand.  Certainly, a method like this is short:</p>
+
+<div class="highlight">
+<pre><span class="k">def</span> <span class="nf">test_radius</span>
+  <span class="n">assert_equal</span> <span class="mi">314</span><span class="p">,</span><span class="no">Circle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">radius</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>But, we rarely get such simple methods <em>and</em> this test method isn't very modifiable; everything is on one line and it doesn't encourage re-use.  We can do better.</p>
+
+<h3>What about mocks?</h3>
+
+<p>Mocks create an interesting issue, because the "assertions" are the mock expectations you setup before you call the method under test.  This means that the "then" side of things is out of order.</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">CircleTest</span> <span class="o">&lt;</span> <span class="no">Test</span><span class="o">::</span><span class="no">Unit</span><span class="o">::</span><span class="no">Given</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="n">test_that</span> <span class="s2">"our external diameter service is being used"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="vi">@diameter_service</span> <span class="o">=</span> <span class="n">mock</span><span class="p">()</span>
+      <span class="vi">@diameter_service</span><span class="o">.</span><span class="n">expects</span><span class="p">(</span><span class="ss">:get_diameter</span><span class="p">)</span><span class="o">.</span><span class="n">with</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">returns</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+      <span class="vi">@circle</span> <span class="o">=</span> <span class="no">Circle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="vi">@diameter_service</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span>  <span class="p">{</span>
+      <span class="vi">@diameter</span> <span class="o">=</span> <span class="vi">@circle</span><span class="o">.</span><span class="n">diameter</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="sr">//</span> <span class="n">assume</span> <span class="n">mocks</span> <span class="n">were</span> <span class="n">called</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>This is somewhat confusing.  We could solve it using two blocks provided by this library, <code>the_test_runs</code>, and <code>mocks_shouldve_been_called</code>, like so:</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">CircleTest</span> <span class="o">&lt;</span> <span class="no">Test</span><span class="o">::</span><span class="no">Unit</span><span class="o">::</span><span class="no">Given</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="n">test_that</span> <span class="s2">"our external diameter service is being used"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="vi">@diameter_service</span> <span class="o">=</span> <span class="n">mock</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="n">the_test_runs</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="vi">@diameter_service</span><span class="o">.</span><span class="n">expects</span><span class="p">(</span><span class="ss">:get_diameter</span><span class="p">)</span><span class="o">.</span><span class="n">with</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">returns</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="vi">@circle</span> <span class="o">=</span> <span class="no">Circle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="vi">@diameter_service</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span>  <span class="p">{</span>
+      <span class="vi">@diameter</span> <span class="o">=</span> <span class="vi">@circle</span><span class="o">.</span><span class="n">diameter</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="n">mocks_shouldve_been_called</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>Although both <tt>the_test_runs</tt> and <tt>mocks_shouldve_been_called</tt> are no-ops,
+they allow our tests to be readable and make clear what the assertions are that we are making.</p>
+
+<p>Yes, this makes our test a bit longer, but it's <em>much</em> more clear.</p>
+
+<h3>What about block-based assertions, like <code>assert_raises</code>
+</h3>
+
+<p>Again, things are a bit out of order in a class test case, but you can clean this up without this library or any craziness, by just using Ruby:</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">CircleTest</span> <span class="o">&lt;</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">TestCase</span>
+
+  <span class="n">test_that</span> <span class="s2">"there is no diameter method"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="vi">@circle</span> <span class="o">=</span> <span class="no">Circle</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="p">{</span>
+      <span class="vi">@code</span> <span class="o">=</span> <span class="nb">lambda</span> <span class="p">{</span> <span class="vi">@circle</span><span class="o">.</span><span class="n">diameter</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_raises</span><span class="p">(</span><span class="no">NoMethodError</span><span class="p">,</span><span class="o">&amp;</span><span class="vi">@code</span><span class="p">)</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<h3>My tests require a lot of setup, so I use contexts in shoulda/RSpec.  What say you?</h3>
+
+<p>Duplicated setup can be tricky.  A problem with heavily nested contexts in Shoulda or RSpec is that it can be hard to piece together what all the "Givens" of a particular test actually are.  As a reaction to this, a lot of developers tend to just duplicate setup code, so that each test "stands on its own".  This makes adding features or changing things difficult, because it's not clear what duplicated code is the same by happenstance, or the same because it's <em>supposed</em> to be the same.</p>
+
+<p>To deal with this, we simply use Ruby and <i>method extraction</i>.  Let's say we have a <code>Salutation</code> class that takes a <code>Person</code> and a <code>Language</code> in its constructor, and then provides methods to "greet" that person</p>
+
+<pre><code>class Salutation
+  def initialize(person,language)
+    raise "person required" if person.nil?
+    raise "language required" if language.nil?
+  end
+
+  # ... methods
+end
+</code></pre>
+
+<p>To test this class, we always need a non-nil person and language.  We might end up with code like this:</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">SalutationTest</span> <span class="o">&lt;&lt;</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="n">test_that</span> <span class="s2">"greeting works"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"David"</span><span class="p">,</span><span class="s2">"Copeland"</span><span class="p">,</span><span class="ss">:male</span><span class="p">)</span>
+      <span class="n">language</span> <span class="o">=</span> <span class="no">Language</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"English"</span><span class="p">,</span><span class="s2">"en"</span><span class="p">)</span>
+      <span class="vi">@salutation</span> <span class="o">=</span> <span class="no">Salutation</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">person</span><span class="p">,</span><span class="n">language</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="p">{</span> 
+      <span class="vi">@greeting</span> <span class="o">=</span> <span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_equal</span> <span class="s2">"Hello, David!"</span><span class="p">,</span><span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="n">test_that</span> <span class="s2">"greeting works for no first name"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="n">person</span> <span class="o">=</span> <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span><span class="s2">"Copeland"</span><span class="p">,</span><span class="ss">:male</span><span class="p">)</span>
+      <span class="n">language</span> <span class="o">=</span> <span class="no">Language</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"English"</span><span class="p">,</span><span class="s2">"en"</span><span class="p">)</span>
+      <span class="vi">@salutation</span> <span class="o">=</span> <span class="no">Salutation</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">person</span><span class="p">,</span><span class="n">language</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="p">{</span> 
+      <span class="vi">@greeting</span> <span class="o">=</span> <span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_equal</span> <span class="s2">"Hello, Mr. Copeland!"</span><span class="p">,</span><span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>In both cases, the language is the same, and the person is slightly different.  Method extraction:</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">SalutationTest</span> <span class="o">&lt;&lt;</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="n">test_that</span> <span class="s2">"greeting works"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="vi">@salutation</span> <span class="o">=</span> <span class="no">Salutation</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">male_with_first_name</span><span class="p">(</span><span class="s2">"David"</span><span class="p">),</span><span class="n">english</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="p">{</span> 
+      <span class="vi">@greeting</span> <span class="o">=</span> <span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_equal</span> <span class="s2">"Hello, David!"</span><span class="p">,</span><span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="n">test_that</span> <span class="s2">"greeting works for no first name"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="p">{</span>
+      <span class="vi">@salutation</span> <span class="o">=</span> <span class="no">Salutation</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">male_with_no_first_name</span><span class="p">(</span><span class="s2">"Copeland"</span><span class="p">),</span><span class="n">english</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="no">When</span> <span class="p">{</span> 
+      <span class="vi">@greeting</span> <span class="o">=</span> <span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_equal</span> <span class="s2">"Hello, Mr. Copeland!"</span><span class="p">,</span><span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+
+<span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">male_with_first_name</span><span class="p">(</span><span class="n">first_name</span><span class="p">)</span>
+    <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span><span class="n">any_string</span><span class="p">,</span><span class="ss">:male</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">male_with_no_first_name</span><span class="p">(</span><span class="n">last_name</span><span class="p">)</span>
+    <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span><span class="n">last_name</span><span class="p">,</span><span class="ss">:male</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">english</span><span class="p">;</span> <span class="no">Language</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"English"</span><span class="p">,</span><span class="s2">"en"</span><span class="p">);</span> <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<h3>What did that have to do with this gem?</h3>
+
+<p>Nothing.  That's the point.  You have the power already.  That being said, <code>Given</code> and friends can take a symbol representing the name of a method to call, in lieu of a block:</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">SalutationTest</span> <span class="o">&lt;&lt;</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="n">test_that</span> <span class="s2">"greeting works"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="ss">:english_salutation_for</span><span class="p">,</span><span class="n">male_with_first_name</span><span class="p">(</span><span class="s2">"David"</span><span class="p">)</span>
+    <span class="no">When</span> <span class="p">{</span> 
+      <span class="vi">@greeting</span> <span class="o">=</span> <span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_equal</span> <span class="s2">"Hello, David!"</span><span class="p">,</span><span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+
+  <span class="n">test_that</span> <span class="s2">"greeting works for no first name"</span> <span class="k">do</span>
+    <span class="no">Given</span> <span class="ss">:english_salutation_for</span><span class="p">,</span><span class="n">male_with_no_first_name</span><span class="p">(</span><span class="s2">"Copeland"</span><span class="p">)</span>
+    <span class="no">When</span> <span class="p">{</span> 
+      <span class="vi">@greeting</span> <span class="o">=</span> <span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+    <span class="no">Then</span> <span class="p">{</span>
+      <span class="n">assert_equal</span> <span class="s2">"Hello, Mr. Copeland!"</span><span class="p">,</span><span class="vi">@salutation</span><span class="o">.</span><span class="n">greeting</span>
+    <span class="p">}</span>
+  <span class="k">end</span>
+
+<span class="kp">private</span>
+  <span class="k">def</span> <span class="nf">male_with_first_name</span><span class="p">(</span><span class="n">first_name</span><span class="p">)</span>
+    <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">first_name</span><span class="p">,</span><span class="n">any_string</span><span class="p">,</span><span class="ss">:male</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">male_with_no_first_name</span><span class="p">(</span><span class="n">last_name</span><span class="p">)</span>
+    <span class="no">Person</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="kp">nil</span><span class="p">,</span><span class="n">last_name</span><span class="p">,</span><span class="ss">:male</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">english_salutation_for</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
+    <span class="vi">@salutation</span> <span class="o">=</span> <span class="no">Salutation</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">person</span><span class="p">,</span><span class="no">Language</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">"English"</span><span class="p">,</span><span class="s2">"en"</span><span class="p">))</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<h3>Why Any instead of Faker?</h3>
+
+<p>Faker is used by Any under the covers, but Faker has two problems:</p>
+
+<ul>
+<li>We aren't <em>faking</em> values, we're using <em>arbitrary</em> values.  There's a difference semantically, even if the mechanics are the same</li>
+<li>Faker requires too much typing to get arbitrary values.  I'd rather type <code>any_string</code> than <tt>Faker::Lorem.words(1).join(' ')</tt>
+</li>
+</ul><h3>What about Factory Girl?</h3>
+
+<p>Again, FactoryGirl goes through metaprogramming hoops to do something we can already do in Ruby: call methods.  Factory Girl also places factories in global scope, making tests more brittle.  You either have a ton of tests depending on the same factory or you have test-specific factories, all in global scope.  It's just simpler and more maintainable to use methods and modules for this.  To re-use "factories" produced by simple methods, just put them in a module.</p>
+
+<p>Further, the <code>Any</code> module is extensible, in that you can do stuff like <tt>any Person</tt>, but you can, and should, just use methods.  Any helps out with primitives that we tend to use a lot: numbers and strings.  It's just simpler and, with less moving parts, more predictable.  This means you spend more time on your tests than on your test infrastructure.</p>
+
+<h3>Any uses random numbers and strings.  Tests aren't repeatable!</h3>
+
+<p>You can make them repeatable by explicitly setting the random seed to a literal value.  Also, including Any will record
+the random seed used and output it.  You can then set <code>RANDOM_SEED</code> in the environment to re-run he tests using that seed.</p>
+
+<p>Keep in mind that if <em>any</em> value will work, random values shouldn't be a problem.</p>
+
+<h3>What about not using the base class?</h3>
+
+<p>To use Any on its own:</p>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'clean_test/any'</span>
+
+<span class="k">class</span> <span class="nc">MyTest</span> <span class="o">&lt;</span> <span class="no">Test</span><span class="o">::</span><span class="no">Unit</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="kp">include</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">Any</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>To use GivenWhenThen on its own:</p>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'clean_test/given_when_then'</span>
+
+<span class="k">class</span> <span class="nc">MyTest</span> <span class="o">&lt;</span> <span class="no">Test</span><span class="o">::</span><span class="no">Unit</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="kp">include</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">GivenWhenThen</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+
+<p>To use TestThat on its own:</p>
+
+<div class="highlight">
+<pre><span class="nb">require</span> <span class="s1">'clean_test/test_that'</span>
+
+<span class="k">class</span> <span class="nc">MyTest</span> <span class="o">&lt;</span> <span class="no">Test</span><span class="o">::</span><span class="no">Unit</span><span class="o">::</span><span class="no">TestCase</span>
+  <span class="kp">include</span> <span class="no">Clean</span><span class="o">::</span><span class="no">Test</span><span class="o">::</span><span class="no">TestThat</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/davetron5000">davetron5000</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
