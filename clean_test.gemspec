@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.add_dependency("faker")
   s.add_development_dependency("rdoc")
+  s.add_development_dependency("sdoc")
   s.add_development_dependency("rake")
   s.add_development_dependency("simplecov")
 end

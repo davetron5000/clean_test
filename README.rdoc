@@ -8,6 +8,9 @@ Get your Test::Unit test cases readable and fluent, without RSpec, magic, or cra
 
 This library is a set of small, simple tools to make your Test::Unit test cases easy to understand.  This isn't a massive change in how you write tests, but simply some helpful things will make your tests easier to read.
 
+* {Source}[http://www.github.com/davetron5000/clean_test]
+* {RDoc}[http://davetron5000.github.com/clean_test/rdoc]
+
 The main problems this library solves are:
 
 * Understanding what part of a test method is setup, test, and evaluation
