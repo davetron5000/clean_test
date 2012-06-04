@@ -21,7 +21,7 @@ module Clean #:nodoc:
     # #mocks_shouldve_been_called to assist with creating readable tests that use mocks.  See those
     # methods for an example
     module GivenWhenThen
-      # Public: Declarea step in your test, based on the following conventions:
+      # Public: Declare a step in your test, based on the following conventions:
       #
       # Given - This sets up conditions for the test
       # When  - This executes the code under test
@@ -34,7 +34,7 @@ module Clean #:nodoc:
       # block  - in this form, you pass a block that contains the test code.  This should be preferred as it
       #          keeps your test code in your test
       # method - in this form, you pass a symbol that is the name of a method in your test class.  This method
-      #          should set or perform or assert whatever is needed.  This can be useful to re-use test helper
+      #          should set up or perform or assert whatever is needed.  This can be useful to re-use test helper
       #          methods in an expedient fashion.  In this case, you can pass parameters by simply listing
       #          them after the symbol.  See the example.
       # lambda - in this form, you declare a method that returns a lambda and that is used as the

@@ -316,25 +316,8 @@ Further, the +Any+ module is extensible, in that you can do stuff like <tt>any P
 
 === Any uses random numbers and strings.  Tests aren't repeatable!
 
-Sure they are.
-
-    def setup
-      Random.srand(0) # or whatever value
-    end
-
-You can also add this to your test set up code (making sure it runs in process with your tests):
-
-
-    seed = if ENV['RANDOM_SEED']
-             ENV['RANDOM_SEED'].to_i
-           else
-             srand() # generate random seed
-             seed = srand() # save it (but we've now generated another one)
-           end
-    srand(seed) # set it explicitly
-    puts "Random seed was #{seed}"
-
-You can then set +RANDOM_SEED+ in your environment to recreate a specific test.
+You can make them repeatable by explicitly setting the random seed to a literal value.  Also, including Any will record
+the random seed used and output it.  You can then set +RANDOM_SEED+ in the environment to re-run he tests using that seed.
 
 Keep in mind that if _any_ value will work, random values shouldn't be a problem.
 

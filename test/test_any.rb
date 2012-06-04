@@ -106,38 +106,6 @@ class TestAny < Clean::Test::TestCase
   }
 
 
-  test_that "we can register custom anys" do 
-    Given {
-      new_any :foo do
-        "bar"
-      end
-    }
-    When {
-      @result = any :foo
-    }
-    Then {
-      assert_equal 'bar',@result
-    }
-  end
-
-  test_that "custom anys can take options" do 
-    Given {
-      new_any :foo do |options|
-        if options[:baaz]
-          'quux'
-        else
-          'bar'
-        end
-      end
-    }
-    When {
-      @result = any :foo, :baaz => true
-    }
-    Then {
-      assert_equal 'quux',@result
-    }
-  end
-
   test_that "any_symbol works" do
     When {
       @symbol = any_symbol
@@ -147,24 +115,5 @@ class TestAny < Clean::Test::TestCase
       assert @symbol.kind_of? Symbol
       assert @symbol.to_s.length < 20
     }
-  end
-
-  [String,[Integer,Fixnum],Fixnum,Float,[Numeric,Float]].each do |klass|
-    test_that "can get an any #{klass}" do 
-      Given {
-        @class = @expected_class = klass
-        if @class.kind_of? Array
-          @expected_class = @class[1]
-          @class = @class[0]
-        end
-      }
-      When {
-        @value = any @class
-      }
-      Then {
-        assert_not_nil @value
-        assert_equal @expected_class,@value.class
-      }
-    end
   end
 end
