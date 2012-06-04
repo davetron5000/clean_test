@@ -1,0 +1,531 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Clean::Test::GivenWhenThen</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <link rel="stylesheet" href="../../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../css/github.css" type="text/css" media="screen" />
+<script src="../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Module</span> 
+            Clean::Test::GivenWhenThen 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../files/lib/clean_test/given_when_then_rb.html">lib/clean_test/given_when_then.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>A means of documenting the parts of your test code according to the class
+"Given/When/Then" system. This does no enforcement of any kind and is
+merely documentation to make your tests readable.</p>
+
+<p>Example:</p>
+
+<pre>Given {
+  @circle = Circle.new(10)
+}
+When {
+  @area = @circle.area
+}
+Then {
+  assert_equal 314,@area
+}</pre>
+
+<p>There are also two additional methods provided ,<a
+href="GivenWhenThen.html#method-i-the_test_runs">#the_test_runs</a> and <a
+href="GivenWhenThen.html#method-i-mocks_shouldve_been_called">#mocks_shouldve_been_called</a>
+to assist with creating readable tests that use mocks.  See those methods
+for an example</p>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+    <!-- Sections -->
+    <div class="sectiontitle">Sections</div>
+    <ul>
+      
+        <li><a href="#Public">Public</a></li>
+      
+    </ul>
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>A</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-And">And</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>B</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-But">But</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>G</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-Given">Given</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>T</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-Then">Then</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>W</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-When">When</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>M</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-mocks_shouldve_been_called">mocks_shouldve_been_called</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>T</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-the_test_runs">the_test_runs</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+              
+
+    
+      <div class="contenttitle" id="Public">
+        Public
+      </div>
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+        
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-And">
+            
+              <a name="method-i-And"></a><b>And</b>(existing_block=nil,*other_args,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Extend a Given/When/Then when using method or lambda form. Behavior
+identical to <a href="GivenWhenThen.html#method-i-Given">#Given</a></p>
+            </div>
+          
+          
+          
+          
+          
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-But">
+            
+              <a name="method-i-But"></a><b>But</b>(existing_block=nil,*other_args,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Extend a Given/When/Then when using method or lambda form. Behavior
+identical to <a href="GivenWhenThen.html#method-i-Given">#Given</a></p>
+            </div>
+          
+          
+          
+          
+          
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-Given">
+            
+              <a name="method-i-Given"></a><b>Given</b>(existing_block=nil,*other_args,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Declare a step in your test, based on the following conventions:</p>
+<dl class="rdoc-list note-list"><dt><a href="GivenWhenThen.html#method-i-Given">#Given</a>
+<dd>
+<p>This sets up conditions for the test</p>
+</dd><dt><a href="GivenWhenThen.html#method-i-When">#When</a>
+<dd>
+<p>This executes the code under test</p>
+</dd><dt><a href="GivenWhenThen.html#method-i-Then">#Then</a>
+<dd>
+<p>This asserts that that the code under test worked correctly</p>
+</dd><dt><a href="GivenWhenThen.html#method-i-And">#And</a>
+<dd>
+<p>Extend a Given/When/Then when using lambda/method form (see below)</p>
+</dd><dt><a href="GivenWhenThen.html#method-i-But">#But</a>
+<dd>
+<p>Extend a Given/When/Then when using lambda/method form (see below)</p>
+</dd></dl>
+
+<p>There are three forms for calling this method, in order of preference:</p>
+<dl class="rdoc-list note-list"><dt>block
+<dd>
+<p>in this form, you pass a block that contains the test code.  This should be
+preferred as it keeps your test code in your test</p>
+</dd><dt>method
+<dd>
+<p>in this form, you pass a symbol that is the name of a method in your test
+class.  This method should set up or perform or assert whatever is needed. 
+This can be useful to re-use test helper methods in an expedient fashion. 
+In this case, you can pass parameters by simply listing them after the
+symbol.  See the example.</p>
+</dd><dt>lambda
+<dd>
+<p>in this form, you declare a method that returns a lambda and that is used
+as the block for this step of the test.  This is least desirable, as it
+requires methods to return lambdas, which is an extra bit of indirection
+that adds noise.</p>
+</dd></dl>
+
+<p>Parameters:</p>
+<dl class="rdoc-list note-list"><dt>existing_block
+<dd>
+<p>a callable object (e.g. a Proc) that will be called immediately by this <a
+href="GivenWhenThen.html#method-i-Given">#Given</a>.  If this is a Symbol,
+a method in the current scope will be converted into a block and used. If
+nil, &amp;block is expected to be passed</p>
+</dd><dt>other_args
+<dd>
+<p>a list of arguments to be passed to the block.  This is mostly useful when
+using method form.</p>
+</dd><dt>block
+<dd>
+<p>a block given to this call that will be executed immediately by this <a
+href="GivenWhenThen.html#method-i-Given">#Given</a>.  If existing_block is
+non-nil, this is ignored</p>
+</dd></dl>
+
+<h3 id="method-i-Given-label-Examples">Examples</h3>
+
+<pre class="ruby"><span class="ruby-comment"># block form</span>
+<span class="ruby-constant">Given</span> {
+  <span class="ruby-ivar">@foo</span> = <span class="ruby-string">&quot;bar&quot;</span>
+}
+
+<span class="ruby-comment"># method form</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assert_valid_person</span>
+  <span class="ruby-identifier">assert</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">valid?</span>,<span class="ruby-node">&quot;Person invalid: #{@person.errors.full_messages}&quot;</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-constant">Given</span> {
+  <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Copeland'</span>, :<span class="ruby-identifier">first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Dave'</span>)
+}
+<span class="ruby-constant">Then</span> :<span class="ruby-identifier">assert_valid_person</span>
+
+<span class="ruby-comment"># method form with arguments</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assert_invalid_person</span>(<span class="ruby-identifier">error_field</span>)
+  <span class="ruby-identifier">assert</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@person</span>.<span class="ruby-identifier">valid?</span>
+  <span class="ruby-identifier">assert</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-identifier">error_field</span>].<span class="ruby-identifier">present?</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-constant">Given</span> {
+  <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Copeland'</span>)
+}
+<span class="ruby-constant">Then</span> :<span class="ruby-identifier">assert_invalid_person</span>,:<span class="ruby-identifier">first_name</span>
+
+<span class="ruby-comment"># lambda form</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assert_valid_person</span>
+  <span class="ruby-identifier">lambda</span> { 
+    <span class="ruby-identifier">assert</span> <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">valid?</span>,<span class="ruby-node">&quot;Person invalid: #{@person.errors.full_messages}&quot;</span>
+  }
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-constant">Given</span> {
+  <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">new</span>(:<span class="ruby-identifier">last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Copeland'</span>, :<span class="ruby-identifier">first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Dave'</span>)
+}
+<span class="ruby-constant">Then</span> <span class="ruby-identifier">assert_valid_person</span>
+</pre>
+
+<p>Returns the block that was executed</p>
+            </div>
+          
+          
+          
+            <div class="aka">
+              Also aliased as: <a href="GivenWhenThen.html#method-i-When">When</a>, <a href="GivenWhenThen.html#method-i-Then">Then</a>, <a href="GivenWhenThen.html#method-i-And">And</a>, <a href="GivenWhenThen.html#method-i-But">But</a>
+            </div>
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-Given_source')" id="l_method-i-Given_source">show</a>
+                
+              </p>
+              <div id="method-i-Given_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/given_when_then.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">Given</span>(<span class="ruby-identifier">existing_block</span>=<span class="ruby-keyword">nil</span>,*<span class="ruby-identifier">other_args</span>,&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_block</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(*<span class="ruby-identifier">other_args</span>)
+    <span class="ruby-identifier">block</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">existing_block</span>.<span class="ruby-identifier">kind_of?</span>(<span class="ruby-constant">Symbol</span>)
+      <span class="ruby-identifier">existing_block</span> = <span class="ruby-identifier">method</span>(<span class="ruby-identifier">existing_block</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">existing_block</span>.<span class="ruby-identifier">call</span>(*<span class="ruby-identifier">other_args</span>)
+    <span class="ruby-identifier">existing_block</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-Then">
+            
+              <a name="method-i-Then"></a><b>Then</b>(existing_block=nil,*other_args,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Assert the results of the test. Behavior identical to <a
+href="GivenWhenThen.html#method-i-Given">#Given</a></p>
+            </div>
+          
+          
+          
+          
+          
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-When">
+            
+              <a name="method-i-When"></a><b>When</b>(existing_block=nil,*other_args,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Execute the code under test.  Behavior identical to <a
+href="GivenWhenThen.html#method-i-Given">#Given</a></p>
+            </div>
+          
+          
+          
+          
+          
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-mocks_shouldve_been_called">
+            
+              <a name="method-i-mocks_shouldve_been_called"></a><b>mocks_shouldve_been_called</b>()
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Similar to <a
+href="GivenWhenThen.html#method-i-the_test_runs">#the_test_runs</a>, this
+is used to make clear what you are testing and what the assertions are. 
+Since many Ruby mock frameworks do not require an explicit "verify" step,
+you often have tests that have no explicit asserts, the assertions being
+simply that the mocks were called as expected.  This step, which is a
+no-op, allows you to document that you are  expecting mocks to be called
+(rather than forgot to assert anything).  See the example in
+mocks_are_called for usage.</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-mocks_shouldve_been_called_source')" id="l_method-i-mocks_shouldve_been_called_source">show</a>
+                
+              </p>
+              <div id="method-i-mocks_shouldve_been_called_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/given_when_then.rb, line 151</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">mocks_shouldve_been_called</span>
+  <span class="ruby-identifier">lambda</span> {}
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-the_test_runs">
+            
+              <a name="method-i-the_test_runs"></a><b>the_test_runs</b>()
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Used to make clear the structure of tests using mocks. This returns a
+no-op, and is intended to be used with a "When" to delineate the creation
+of a mock in a <a href="GivenWhenThen.html#method-i-Given">#Given</a>, and
+the  expectations of a mock in a "Then"</p>
+
+<p>Example:</p>
+
+<pre>Given {
+  @google = mock()
+}
+When the_test_runs
+Then {
+  @google.expects(:search).with('foo').returns('bar')
+}
+Given {
+  @my_search = Search.new(@google)
+}
+When {
+  @result = @my_search.find('foo')
+}
+Then {
+  assert_equal 'Found bar',@result
+}
+And mocks_shouldve_been_called</pre>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-the_test_runs_source')" id="l_method-i-the_test_runs_source">show</a>
+                
+              </p>
+              <div id="method-i-the_test_runs_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/given_when_then.rb, line 140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">the_test_runs</span>
+  <span class="ruby-identifier">lambda</span> {}
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+    </div>
+  </body>
+</html>    

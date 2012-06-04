@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Clean::Test::TestThat::ClassMethods</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <link rel="stylesheet" href="../../../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../../css/github.css" type="text/css" media="screen" />
+<script src="../../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Module</span> 
+            Clean::Test::TestThat::ClassMethods 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../../files/lib/clean_test/test_that_rb.html">lib/clean_test/test_that.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+
+
+  
+
+
+  
+  
+    <!-- Sections -->
+    <div class="sectiontitle">Sections</div>
+    <ul>
+      
+        <li><a href="#Public">Public</a></li>
+      
+    </ul>
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>S</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-skip_a_test_that">skip_a_test_that</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-someday_test_that">someday_test_that</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>T</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-test_that">test_that</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+              
+
+    
+      <div class="contenttitle" id="Public">
+        Public
+      </div>
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+        
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-skip_a_test_that">
+            
+              <a name="method-i-skip_a_test_that"></a><b>skip_a_test_that</b>(description=nil,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Create a test that you don't want to actually run. This can be handy if you
+want to temporarily keep a test from running, but don't want to deal with
+comments or if (false) blocks. Tests skipped this way will generate a
+warning to the standard error. Arguments are indentical to <a
+href="ClassMethods.html#method-i-test_that">#test_that</a></p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-skip_a_test_that_source')" id="l_method-i-skip_a_test_that_source">show</a>
+                
+              </p>
+              <div id="method-i-skip_a_test_that_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/test_that.rb, line 56</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">skip_a_test_that</span>(<span class="ruby-identifier">description</span>=<span class="ruby-keyword">nil</span>,&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">description</span> = <span class="ruby-identifier">make_up_name</span>(<span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">description</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-constant">STDERR</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;warning: test 'test that #{description}' is being skipped&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">$FOR_TESTING_ONLY_SKIP_STDERR</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-someday_test_that">
+            
+              <a name="method-i-someday_test_that"></a><b>someday_test_that</b>(description=nil,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Create a test that is pending or that you intend to implement soon. This
+can be handy for sketching out some tests that you want, as this will print
+the pending tests to the standard error</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-someday_test_that_source')" id="l_method-i-someday_test_that_source">show</a>
+                
+              </p>
+              <div id="method-i-someday_test_that_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/test_that.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">someday_test_that</span>(<span class="ruby-identifier">description</span>=<span class="ruby-keyword">nil</span>,&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">description</span> = <span class="ruby-identifier">make_up_name</span>(<span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">description</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-constant">STDERR</span>.<span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;warning: test 'test that #{description}' is pending&quot;</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">$FOR_TESTING_ONLY_SKIP_STDERR</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-test_that">
+            
+              <a name="method-i-test_that"></a><b>test_that</b>(description=nil,&amp;block)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Create a new test method with the given optional description and body.</p>
+<dl class="rdoc-list note-list"><dt>description
+<dd>
+<p>a string describing what is being tested; write this as a follow on from
+the phrase "test that".  If nil, a name will be constructed based on the
+block</p>
+</dd><dt>block
+<dd>
+<p>the body of the test.</p>
+</dd></dl>
+
+<p>Example</p>
+
+<pre class="ruby"><span class="ruby-comment"># Create a rails-style test method</span>
+<span class="ruby-identifier">test_that</span> <span class="ruby-string">&quot;area is computed based on positive radius&quot;</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-constant">Given</span> {
+    <span class="ruby-ivar">@circle</span> = <span class="ruby-constant">Circle</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">10</span>)
+  }
+  <span class="ruby-constant">When</span> {
+    <span class="ruby-ivar">@area</span> = <span class="ruby-ivar">@circle</span>.<span class="ruby-identifier">area</span>
+  }
+  <span class="ruby-constant">Then</span> {
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-value">314</span>,<span class="ruby-ivar">@area</span>
+  }
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-comment"># Create an &quot;anonymous&quot; test, where the test body</span>
+<span class="ruby-comment"># is clear enough as to what's being tested</span>
+<span class="ruby-identifier">test_that</span> {
+  <span class="ruby-constant">Given</span> <span class="ruby-identifier">a_circle</span>(:<span class="ruby-identifier">radius</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">10</span>)
+  <span class="ruby-constant">When</span> <span class="ruby-identifier">get_area</span>
+  <span class="ruby-constant">Then</span> <span class="ruby-identifier">area_should_be</span>(<span class="ruby-value">314</span>)
+}
+</pre>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-test_that_source')" id="l_method-i-test_that_source">show</a>
+                
+              </p>
+              <div id="method-i-test_that_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/test_that.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">test_that</span>(<span class="ruby-identifier">description</span>=<span class="ruby-keyword">nil</span>,&amp;<span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;You must provide a block&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-identifier">description</span> = <span class="ruby-identifier">make_up_name</span>(<span class="ruby-identifier">block</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">description</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-identifier">test_name</span> = <span class="ruby-node">&quot;test_#{description.gsub(/\s+/,'_')}&quot;</span>.<span class="ruby-identifier">to_sym</span>
+  <span class="ruby-identifier">defined</span> = <span class="ruby-identifier">instance_method</span>(<span class="ruby-identifier">test_name</span>) <span class="ruby-keyword">rescue</span> <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">raise</span> <span class="ruby-node">&quot;#{test_name} is already defined in #{self}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">defined</span>
+  <span class="ruby-identifier">define_method</span>(<span class="ruby-identifier">test_name</span>, &amp;<span class="ruby-identifier">block</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+    </div>
+  </body>
+</html>    

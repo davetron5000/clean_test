@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>Clean::Test::Any</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=ASCII-8BIT" />
+    <link rel="stylesheet" href="../../../css/reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../css/main.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="../../../css/github.css" type="text/css" media="screen" />
+<script src="../../../js/jquery-1.3.2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/jquery-effect.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../../js/highlight.pack.js" type="text/javascript" charset="utf-8"></script>
+
+</head>
+
+<body>     
+    <div class="banner">
+        
+        <h1>
+            <span class="type">Module</span> 
+            Clean::Test::Any 
+            
+        </h1>
+        <ul class="files">
+            
+            <li><a href="../../../files/lib/clean_test/any_rb.html">lib/clean_test/any.rb</a></li>
+            
+        </ul>
+    </div>
+    <div id="bodyContent">
+        <div id="content">
+  
+    <div class="description">
+      
+<p>Provides the ability to vend arbitrary values without using literals, or
+long calls to Faker.  This produced random values, so you must be sure that
+your code truly should work with any value.  The random seed used will be
+output, and you can use the environment variable <code>RANDOM_SEED</code>
+to recreate the conditions of a particular test.</p>
+
+<p>Example:</p>
+
+<pre class="ruby"><span class="ruby-keyword">class</span> <span class="ruby-constant">Person</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>(<span class="ruby-identifier">first_name</span>,<span class="ruby-identifier">last_name</span>,<span class="ruby-identifier">age</span>)
+    <span class="ruby-comment"># ...</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+
+<span class="ruby-identifier">test_that</span> <span class="ruby-string">&quot;someone under 18 is a minor&quot;</span> {
+  <span class="ruby-constant">Given</span> {
+    <span class="ruby-comment"># First name and last name aren't relevant to the test</span>
+    <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">any_string</span>,<span class="ruby-identifier">any_string</span>,<span class="ruby-value">17</span>)
+  }
+  <span class="ruby-constant">When</span> {
+    <span class="ruby-ivar">@minor</span> = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">minor?</span>
+  }
+  <span class="ruby-constant">Then</span> {
+    <span class="ruby-identifier">assert</span> <span class="ruby-ivar">@minor</span>
+  }
+}
+
+<span class="ruby-identifier">test_that</span> <span class="ruby-string">&quot;full_name gives the full name&quot;</span> {
+  <span class="ruby-constant">Given</span> {
+    <span class="ruby-comment"># Age isn't relevant; it just needs to be positive</span>
+    <span class="ruby-ivar">@person</span> = <span class="ruby-constant">Person</span>.<span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;Dave&quot;</span>,<span class="ruby-string">&quot;Copeland&quot;</span>,<span class="ruby-identifier">any_int</span> :<span class="ruby-identifier">positive</span>)
+  }
+  <span class="ruby-constant">When</span> {
+    <span class="ruby-ivar">@full_name</span> = <span class="ruby-ivar">@person</span>.<span class="ruby-identifier">full_name</span>
+  }
+  <span class="ruby-constant">Then</span> {
+    <span class="ruby-identifier">assert_equal</span> <span class="ruby-string">&quot;Dave Copeland&quot;</span>,<span class="ruby-ivar">@full_namej</span>
+  }
+}
+</pre>
+
+    </div>
+  
+
+
+  
+
+
+  
+  
+    <!-- Sections -->
+    <div class="sectiontitle">Sections</div>
+    <ul>
+      
+        <li><a href="#Public">Public</a></li>
+      
+    </ul>
+  
+
+
+  
+
+
+  
+    <!-- Method ref -->
+    <div class="sectiontitle">Methods</div>
+    <dl class="methods">
+      
+        <dt>A</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-i-any_int">any_int</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-any_number">any_number</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-any_sentence">any_sentence</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-any_string">any_string</a>,
+              </li>
+            
+              
+              <li>
+                <a href="#method-i-any_symbol">any_symbol</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+        <dt>I</dt>
+        <dd>
+          <ul>
+            
+              
+              <li>
+                <a href="#method-c-included">included</a>
+              </li>
+            
+          </ul>
+        </dd>
+      
+    </dl>
+  
+
+  
+
+
+
+  
+
+    
+
+    
+
+    
+      <!-- Section constants -->
+      <div class="sectiontitle">Constants</div>
+      <table border='0' cellpadding='5'>
+        
+          <tr valign='top'>
+            <td class="attr-name">MAX_RAND</td>
+            <td>=</td>
+            <td class="attr-value">50000</td>
+          </tr>
+          
+            <tr valign='top'>
+              <td>&nbsp;</td>
+              <td colspan="2" class="attr-desc"></td>
+            </tr>
+          
+        
+      </table>
+    
+
+
+    
+
+
+    <!-- Methods -->
+    
+      <div class="sectiontitle">Class Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-c-included">
+            
+              <a name="method-c-included"></a><b>included</b>(k)
+            
+          </div>
+          
+          
+            <div class="description">
+              
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-c-included_source')" id="l_method-c-included_source">show</a>
+                
+              </p>
+              <div id="method-c-included_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/any.rb, line 44</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">self</span>.<span class="ruby-identifier">included</span>(<span class="ruby-identifier">k</span>)
+  <span class="ruby-identifier">seed</span> = <span class="ruby-keyword">if</span> <span class="ruby-constant">ENV</span>[<span class="ruby-string">'RANDOM_SEED'</span>]
+           <span class="ruby-constant">ENV</span>[<span class="ruby-string">'RANDOM_SEED'</span>].<span class="ruby-identifier">to_i</span>
+         <span class="ruby-keyword">else</span>
+           <span class="ruby-identifier">srand</span>() <span class="ruby-comment"># generate random seed</span>
+           <span class="ruby-identifier">seed</span> = <span class="ruby-identifier">srand</span>() <span class="ruby-comment"># save it (but we've now generated another one)</span>
+         <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">srand</span>(<span class="ruby-identifier">seed</span>) <span class="ruby-comment"># set it explicitly</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Random seed was #{seed}; re-use it via environment variable RANDOM_SEED&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                        
+
+    
+      <div class="contenttitle" id="Public">
+        Public
+      </div>
+    
+
+    
+
+    
+
+
+    
+
+
+    <!-- Methods -->
+        
+      <div class="sectiontitle">Instance Public methods</div>
+      
+        <div class="method">
+          <div class="title method-title" id="method-i-any_int">
+            
+              <a name="method-i-any_int"></a><b>any_int</b>(*options)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Returns an integer.  options is the same as for <a
+href="Any.html#method-i-any_number">#any_number</a></p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-any_int_source')" id="l_method-i-any_int_source">show</a>
+                
+              </p>
+              <div id="method-i-any_int_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/any.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">any_int</span>(*<span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">any_number</span>(*<span class="ruby-identifier">options</span>).<span class="ruby-identifier">to_i</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-any_number">
+            
+              <a name="method-i-any_number"></a><b>any_number</b>(*options)
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Get any number; one that doesn't matter</p>
+<dl class="rdoc-list note-list"><dt>options
+<dd>
+<p>options to control what sort of number comes back:</p>
+<dl class="rdoc-list note-list"><dt>:positive
+<dd>
+<p>make sure that the number is greater than zero</p>
+</dd><dt>:negative
+<dd>
+<p>make sure that the number is less than zero</p>
+</dd></dl>
+</dd></dl>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-any_number_source')" id="l_method-i-any_number_source">show</a>
+                
+              </p>
+              <div id="method-i-any_number_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/any.rb, line 61</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">any_number</span>(*<span class="ruby-identifier">options</span>)
+  <span class="ruby-identifier">number</span> = (<span class="ruby-identifier">rand</span>(<span class="ruby-number">2</span> * <span class="ruby-constant">MAX_RAND</span>) <span class="ruby-operator">-</span> <span class="ruby-constant">MAX_RAND</span>).<span class="ruby-identifier">to_f</span><span class="ruby-operator">/</span><span class="ruby-number">100.0</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">include?</span> <span class="ruby-value">:positive</span>
+    <span class="ruby-identifier">number</span> <span class="ruby-operator">+</span> <span class="ruby-constant">MAX_RAND</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">options</span>.<span class="ruby-identifier">include?</span> <span class="ruby-value">:negative</span>
+    <span class="ruby-identifier">number</span> <span class="ruby-operator">-</span> <span class="ruby-constant">MAX_RAND</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">number</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-any_sentence">
+            
+              <a name="method-i-any_sentence"></a><b>any_sentence</b>(options = {})
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Get an arbitrary sentence of arbitrary words of any potential length. 
+Currently, this returns a sentence between 10 and 21 words, though you can
+control that with options</p>
+<dl class="rdoc-list note-list"><dt>options
+<dd>
+<p>options to control the returned sentence</p>
+<dl class="rdoc-list note-list"><dt>:max
+<dd>
+<p>the maximum number of words you want returned</p>
+</dd><dt>:min
+<dd>
+<p>the minimum number of words you want returned; the sentence will be between
+:min and (:min + 10) words</p>
+</dd></dl>
+</dd></dl>
+
+<p>Example</p>
+
+<pre class="ruby"><span class="ruby-identifier">any_sentence</span> :<span class="ruby-identifier">min</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">20</span>  <span class="ruby-comment"># at least a 20-word sentence</span>
+<span class="ruby-identifier">any_sentence</span> :<span class="ruby-identifier">max</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">4</span>   <span class="ruby-comment"># no more than four words</span>
+</pre>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-any_sentence_source')" id="l_method-i-any_sentence_source">show</a>
+                
+              </p>
+              <div id="method-i-any_sentence_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/any.rb, line 137</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">any_sentence</span>(<span class="ruby-identifier">options</span> = {})
+  <span class="ruby-identifier">min</span> = <span class="ruby-number">11</span>
+  <span class="ruby-identifier">max</span> = <span class="ruby-number">21</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:max</span>]
+    <span class="ruby-identifier">min</span> = <span class="ruby-number">1</span>
+    <span class="ruby-identifier">max</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:max</span>]
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:min</span>]
+    <span class="ruby-identifier">min</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:min</span>]
+    <span class="ruby-identifier">max</span> = <span class="ruby-identifier">min</span> <span class="ruby-operator">+</span> <span class="ruby-number">10</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-constant">Faker</span><span class="ruby-operator">::</span><span class="ruby-constant">Lorem</span>.<span class="ruby-identifier">words</span>(<span class="ruby-identifier">rand</span>(<span class="ruby-identifier">max</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">min</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">min</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">' '</span>)
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-any_string">
+            
+              <a name="method-i-any_string"></a><b>any_string</b>(options = {})
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Get an arbitrary string of any potential positive length</p>
+<dl class="rdoc-list note-list"><dt>options
+<dd>
+<p>options to control the returned string:</p>
+<dl class="rdoc-list note-list"><dt>:max
+<dd>
+<p>the max size of the string you want, must be positive and greater than :min</p>
+</dd><dt>:min
+<dd>
+<p>the minimum size we want to come back, must be positive and less than :max</p>
+</dd></dl>
+</dd></dl>
+
+<p>Example</p>
+
+<pre class="ruby"><span class="ruby-identifier">any_string</span> :<span class="ruby-identifier">max</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">255</span> <span class="ruby-comment"># =&gt; ensure it'll fit into a varchar(255)</span>
+<span class="ruby-identifier">any_string</span> :<span class="ruby-identifier">min</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1024</span> <span class="ruby-comment"># at least 1024 characters</span>
+</pre>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-any_string_source')" id="l_method-i-any_string_source">show</a>
+                
+              </p>
+              <div id="method-i-any_string_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/any.rb, line 88</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">any_string</span>(<span class="ruby-identifier">options</span> = {})
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:min</span>] <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:max</span>]
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;:min must be less than :max&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:min</span>] <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:max</span>]
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:min</span>]
+    <span class="ruby-identifier">raise</span> <span class="ruby-string">&quot;:min must be positive&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">options</span>[<span class="ruby-value">:min</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-number">1</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">min_size</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:min</span>]
+  <span class="ruby-identifier">max_size</span> = <span class="ruby-identifier">options</span>[<span class="ruby-value">:max</span>]
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">min_size</span>.<span class="ruby-identifier">nil?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">max_size</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">min_size</span> = <span class="ruby-identifier">rand</span>(<span class="ruby-number">80</span>) <span class="ruby-operator">+</span> <span class="ruby-number">1</span>
+    <span class="ruby-identifier">max_size</span> = <span class="ruby-identifier">min_size</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rand</span>(<span class="ruby-number">80</span>)
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">min_size</span>.<span class="ruby-identifier">nil?</span>
+    <span class="ruby-identifier">min_size</span> = <span class="ruby-identifier">max_size</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">rand</span>(<span class="ruby-identifier">max_size</span>)
+    <span class="ruby-identifier">min_size</span> = <span class="ruby-number">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">min_size</span> <span class="ruby-operator">&lt;</span> <span class="ruby-number">1</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">max_size</span> = <span class="ruby-identifier">min_size</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">rand</span>(<span class="ruby-identifier">min_size</span>) <span class="ruby-operator">+</span> <span class="ruby-number">1</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">string</span> = <span class="ruby-constant">Faker</span><span class="ruby-operator">::</span><span class="ruby-constant">Lorem</span>.<span class="ruby-identifier">words</span>(<span class="ruby-number">1</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">' '</span>)
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">string</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">min_size</span>
+    <span class="ruby-identifier">string</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Faker</span><span class="ruby-operator">::</span><span class="ruby-constant">Lorem</span>.<span class="ruby-identifier">words</span>(<span class="ruby-number">1</span>).<span class="ruby-identifier">join</span>(<span class="ruby-string">' '</span>) 
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">string</span>[<span class="ruby-number">0</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">max_size</span><span class="ruby-operator">-</span><span class="ruby-number">1</span>)]
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+        
+        <div class="method">
+          <div class="title method-title" id="method-i-any_symbol">
+            
+              <a name="method-i-any_symbol"></a><b>any_symbol</b>()
+            
+          </div>
+          
+          
+            <div class="description">
+              <p>Get an arbitrary symbol, for example to use as a Hash key.  The symbol will
+be between 2 and 20 characters long.  If you need super-long symbols for
+some reason, use <code>any_string.to_sym</code>.</p>
+            </div>
+          
+          
+          
+          
+          
+            
+            <div class="sourcecode">
+              
+              <p class="source-link">
+                Source: 
+                <a href="javascript:toggleSource('method-i-any_symbol_source')" id="l_method-i-any_symbol_source">show</a>
+                
+              </p>
+              <div id="method-i-any_symbol_source" class="dyn-source">
+                <pre><span class="ruby-comment"># File lib/clean_test/any.rb, line 120</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword ruby-title">any_symbol</span>
+  (<span class="ruby-identifier">any_string</span> <span class="ruby-value">:min</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-number">2</span>, <span class="ruby-value">:max</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-number">20</span>).<span class="ruby-identifier">to_sym</span>
+<span class="ruby-keyword">end</span></pre>
+              </div>
+            </div>
+            
+          </div>
+                    </div>
+    </div>
+  </body>
+</html>    
