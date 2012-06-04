@@ -21,116 +21,93 @@ module Clean #:nodoc:
     # #mocks_shouldve_been_called to assist with creating readable tests that use mocks.  See those
     # methods for an example
     module GivenWhenThen
-      # Public: Set up the conditions for the test
+      # Public: Declarea step in your test, based on the following conventions:
+      #
+      # Given - This sets up conditions for the test
+      # When  - This executes the code under test
+      # Then  - This asserts that that the code under test worked correctly
+      # And   - Extend a Given/When/Then when using lambda/method form (see below)
+      # But   - Extend a Given/When/Then when using lambda/method form (see below)
+      #
+      # There are three forms for calling this method, in order of preference:
+      #
+      # block  - in this form, you pass a block that contains the test code.  This should be preferred as it
+      #          keeps your test code in your test
+      # method - in this form, you pass a symbol that is the name of a method in your test class.  This method
+      #          should set or perform or assert whatever is needed.  This can be useful to re-use test helper
+      #          methods in an expedient fashion.  In this case, you can pass parameters by simply listing
+      #          them after the symbol.  See the example.
+      # lambda - in this form, you declare a method that returns a lambda and that is used as the
+      #          block for this step of the test.  This is least desirable, as it requires methods to return
+      #          lambdas, which is an extra bit of indirection that adds noise.
+      #
+      # Parameters:
       #
       # existing_block - a callable object (e.g. a Proc) that will be called immediately
-      #                  by this Given.  If nil, &block is expected to be passed
+      #                  by this Given.  If this is a Symbol, a method in the current scope will be converted into
+      #                  a block and used. If nil, &block is expected to be passed
+      # other_args     - a list of arguments to be passed to the block.  This is mostly useful when using method form.
       # block          - a block given to this call that will be executed immediately
       #                  by this Given.  If existing_block is non-nil, this is ignored
       #
       # Examples
       #     
+      #     # block form
       #     Given {
       #       @foo = "bar"
       #     }
       #
-      # Returns the block that was executed
-      def Given(existing_block=nil,&block)
-        call_block_param_or_block_given(existing_block,&block)
-      end
-      # Public: Execute the code under test
-      #
-      # existing_block - a callable object (e.g. a Proc) that will be called immediately
-      #                  by this When.  If nil, &block is expected to be passed
-      # block          - a block given to this call that will be executed immediately
-      #                  by this When.  If existing_block is non-nil, this is ignored
-      #
-      # Examples
-      #     
-      #     When {
-      #       @foo.go
-      #     }
-      #
-      # Returns the block that was executed
-      def When(existing_block=nil,&block)
-        Given(existing_block,&block)
-      end
-
-      # Public: Verify the results of the test
-      #
-      # existing_block - a callable object (e.g. a Proc) that will be called immediately
-      #                  by this Then.  If nil, &block is expected to be passed
-      # block          - a block given to this call that will be executed immediately
-      #                  by this Then.  If existing_block is non-nil, this is ignored
-      #
-      # Examples
-      #     
-      #     Then {
-      #       assert_equal "bar",@foo
-      #     }
-      #
-      # Returns the block that was executed
-      def Then(existing_block=nil,&block)
-        Given(existing_block,&block)
-      end
-
-      # Public: Continue the previous Given/When/Then in a new block.  The reason
-      # you might do this is if you wanted to use the existing block form of a
-      # Given/When/Then, but also need to do something custom.  This allows you to 
-      # write your test more fluently.
-      #
-      # existing_block - a callable object (e.g. a Proc) that will be called immediately
-      #                  by this Then.  If nil, &block is expected to be passed
-      # block          - a block given to this call that will be executed immediately
-      #                  by this Then.  If existing_block is non-nil, this is ignored
-      #
-      # Examples
-      #     
-      #     def circle(radius)
-      #       lambda { @circle = Circle.new(radius) }
+      #     # method form
+      #     def assert_valid_person
+      #       assert @person.valid?,"Person invalid: #{@person.errors.full_messages}"
       #     end
       #
-      #     Given circle(10)
-      #     And {
-      #       @another_circle = Circle.new(30)
+      #     Given {
+      #       @person = Person.new(:last_name => 'Copeland', :first_name => 'Dave')
       #     }
+      #     Then :assert_valid_person
       #
-      # Returns the block that was executed
-      def And(existing_block=nil,&block)
-        Given(existing_block,&block)
-      end
-
-      # Public: Continue the previous Given/When/Then in a new block.  The reason
-      # you might do this is if you wanted to use the existing block form of a
-      # Given/When/Then, but also need to do something custom, and that custom thing
-      # contradicts or overrides the flow, so an "And" wouldn't read properly.  This allows you to 
-      # write your test more fluently.
+      #     # method form with arguments
+      #     def assert_invalid_person(error_field)
+      #       assert !@person.valid?
+      #       assert @person.errors[error_field].present?
+      #     end
       #
-      # existing_block - a callable object (e.g. a Proc) that will be called immediately
-      #                  by this Then.  If nil, &block is expected to be passed
-      # block          - a block given to this call that will be executed immediately
-      #                  by this Then.  If existing_block is non-nil, this is ignored
+      #     Given {
+      #       @person = Person.new(:last_name => 'Copeland')
+      #     }
+      #     Then :assert_invalid_person,:first_name
       #
-      # Examples
-      #     
-      #     def options
-      #       lambda {
-      #         @options = {
-      #           :foo => 'bar',
-      #           :quux => 'baz',
-      #         }
+      #     # lambda form
+      #     def assert_valid_person
+      #       lambda { 
+      #         assert @person.valid?,"Person invalid: #{@person.errors.full_messages}"
       #       }
       #     end
       #
-      #     Given options
-      #     But {
-      #       @options[:foo] = 'baz'
+      #     Given {
+      #       @person = Person.new(:last_name => 'Copeland', :first_name => 'Dave')
       #     }
+      #     Then assert_valid_person
       #
       # Returns the block that was executed
-      def But(existing_block=nil,&block)
-        Given(existing_block,&block)
+      def Given(existing_block=nil,*other_args,&block)
+        if existing_block.nil?
+          block.call(*other_args)
+          block
+        else
+          if existing_block.kind_of?(Symbol)
+            existing_block = method(existing_block)
+          end
+          existing_block.call(*other_args)
+          existing_block
+        end
       end
+
+      alias :When :Given
+      alias :Then :Given
+      alias :And :Given
+      alias :But :Given
 
       # Public: Used to make clear the structure of tests using mocks.
       # This returns a no-op, and is intended to be used with a "When"
@@ -165,21 +142,10 @@ module Clean #:nodoc:
       # frameworks do not require an explicit "verify" step, you often have tests
       # that have no explicit asserts, the assertions being simply that the mocks were called
       # as expected.  This step, which is a no-op, allows you to document that you are 
-      # expecting mocks to be called. See the example in #mocks_are_called for usage.
+      # expecting mocks to be called (rather than forgot to assert anything). 
+      # See the example in #mocks_are_called for usage.
       def mocks_shouldve_been_called
         lambda {}
-      end
-
-      private
-
-      def call_block_param_or_block_given(existing_block,&block)
-        if existing_block.nil?
-          block.call
-          block
-        else
-          existing_block.call
-          existing_block
-        end
       end
     end
   end

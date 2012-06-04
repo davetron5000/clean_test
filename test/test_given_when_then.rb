@@ -1,7 +1,7 @@
 require 'test/unit'
 require 'clean_test/test_case'
 
-class TestSimpleGiven < Clean::Test::TestCase
+class TestGivenWhenThen < Clean::Test::TestCase
 
   def test_basics
     Given {
@@ -84,6 +84,20 @@ class TestSimpleGiven < Clean::Test::TestCase
     }
   end
 
+  def test_can_use_symbols_for_methods
+    Given :a_string
+    Then {
+      assert_equal "foo",@string
+    }
+  end
+
+  def test_can_pass_params_to_symbols
+    Given :a_string, 4
+    Then {
+      assert_equal 4,@string.length
+    }
+  end
+
   def test_invert_for_block_based_asserts
     Given a_nil_x
     Then {
@@ -96,6 +110,14 @@ class TestSimpleGiven < Clean::Test::TestCase
   end
 
   private 
+
+  def a_string(length=3)
+    if length == 3
+      @string = "foo"
+    else
+      @string = "quux"
+    end
+  end
 
   def a_nil_x
     Proc.new { @x = nil }

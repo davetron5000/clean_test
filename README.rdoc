@@ -260,11 +260,11 @@ In both cases, the language is the same, and the person is slightly different.  
 
 === What did that have to do with this gem?
 
-Nothing.  That's the point.  You have the power already.  Note that, since +Given+ takes a block, you can re-use things that way, if you like:
+Nothing.  That's the point.  You have the power already.  That being said, +Given+ and friends can take a symbol representing the name of a method to call, in lieu of a block:
 
     class SalutationTest << Clean::Test::TestCase
       test_that "greeting works" do
-        Given english_salutation_for(male_with_first_name("David"))
+        Given :english_salutation_for,male_with_first_name("David")
         When { 
           @greeting = @salutation.greeting
         }
@@ -274,7 +274,7 @@ Nothing.  That's the point.  You have the power already.  Note that, since +Give
       end
 
       test_that "greeting works for no first name" do
-        Given english_salutation_for(male_with_first_name("Copeland"))
+        Given :english_salutation_for,male_with_no_first_name("Copeland")
         When { 
           @greeting = @salutation.greeting
         }
@@ -293,13 +293,10 @@ Nothing.  That's the point.  You have the power already.  Note that, since +Give
       end
 
       def english_salutation_for(person)
-        lambda {
-          @salutation = Salutation.new(person,Language.new("English","en"))
-        }
+        @salutation = Salutation.new(person,Language.new("English","en"))
       end
     end
 
-This sort of thing can get confusing, but sometimes works well.
 
 === Why Any instead of Faker?
 
@@ -321,6 +318,20 @@ Sure they are.
     def setup
       Random.srand(0) # or whatever value
     end
+
+You can also add this to your test set up code (making sure it runs in process with your tests):
+
+
+    seed = if ENV['RANDOM_SEED']
+             ENV['RANDOM_SEED'].to_i
+           else
+             srand() # generate random seed
+             seed = srand() # save it (but we've now generated another one)
+           end
+    srand(seed) # set it explicitly
+    puts "Random seed was #{seed}"
+
+You can then set +RANDOM_SEED+ in your environment to recreate a specific test.
 
 Keep in mind that if _any_ value will work, random values shouldn't be a problem.
 
