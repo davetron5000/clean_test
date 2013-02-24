@@ -49,7 +49,7 @@ Or, with bundler:
     require 'clean_test/test_case'
 
     class CircleTest < Clean::Test::TestCase
-      test_that "area is computed correctly" {
+      test_that "area is computed correctly" do
         Given {
           @circle = Circle.new(10,any_string)
         }
@@ -59,9 +59,9 @@ Or, with bundler:
         Then {
           assert_equal 314,@area
         }
-      }
+      end
 
-      test_that "to_s includes the name" {
+      test_that "to_s includes the name" do
         Given { 
           @name = "foo"
           @circle = Circle.new(any_int,@name)
@@ -72,7 +72,7 @@ Or, with bundler:
         Then {
           assert_match /#{@name}/,@string
         }
-      }
+      end
     end
 
 What's going on here?
