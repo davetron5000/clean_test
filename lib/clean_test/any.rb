@@ -107,9 +107,9 @@ module Clean #:nodoc:
           max_size = min_size + rand(min_size) + 1
         end
 
-        string = Faker::Lorem.words(1).join(' ')
+        string = Faker::Lorem.words(number: 1).join(' ')
         while string.length < min_size
-          string += Faker::Lorem.words(1).join(' ') 
+          string += Faker::Lorem.words(number: 1).join(' ') 
         end
 
         string[0..(max_size-1)]
@@ -147,7 +147,7 @@ module Clean #:nodoc:
           max = min + 10
         end
 
-        Faker::Lorem.words(rand(max - min) + min).join(' ')
+        Faker::Lorem.words(number: rand(max - min) + min).join(' ')
       end
     end
   end

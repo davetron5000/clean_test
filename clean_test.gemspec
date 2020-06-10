@@ -12,13 +12,12 @@ Gem::Specification.new do |s|
   s.summary     = %q{Clean up your Test::Unit tests}
   s.description = %q{You can easily make your plain Ruby Test::Unit test cases clean and clear with Given/When/Then, placeholder values, and textual descriptions without resorting to metaprogramming or complex frameworks.  Use as much or as little as you like}
 
-  s.rubyforge_project = "clean_test"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
-  s.add_dependency("faker")
+  s.add_dependency("faker", "~> 2.12.0")
+  s.add_dependency("test-unit")
   s.add_development_dependency("rdoc")
   s.add_development_dependency("sdoc")
   s.add_development_dependency("rake")
